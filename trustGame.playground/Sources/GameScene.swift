@@ -10,6 +10,7 @@ public class GameScene: SKScene {
   private var player1: SKSpriteNode!
   private var coin: SKSpriteNode!
   private var coin1: SKSpriteNode!
+  private var allCooperate: PlayButton!
   
   public override func didMove(to view: SKView) {
     
@@ -18,10 +19,17 @@ public class GameScene: SKScene {
     player1 = childNode(withName: "//player1") as? SKSpriteNode
     coin = childNode(withName: "//coin") as? SKSpriteNode
     
+    allCooperate = PlayButton()
+    allCooperate.position = CGPoint(x: -120 , y: -200)
+    allCooperate.delegate = self
+    addChild(allCooperate)
+    
+    startMachine()
   }
   
   func startMachine() {
      backAnim.run(SKAction.repeat(SKAction(named: "machineAnimation")! , count: 1))
+    playerAnimation()
   }
   
   func playerAnimation() {
@@ -37,4 +45,10 @@ public class GameScene: SKScene {
     run(SKAction.repeat(SKAction.sequence([wait, action]) , count: 1))
   }
   
+}
+
+extension GameScene: PlayButtonDelegate {
+  func didTapPlay(sender: PlayButton) {
+    print("Tapped")
+  }
 }
