@@ -3,70 +3,38 @@ import SpriteKit
 
 public class GameScene: SKScene {
   
-  private var label : SKLabelNode!
-  private var spinnyNode : SKShapeNode!
-  private var backAnim : SKSpriteNode!
+  private var label: SKLabelNode!
+  private var spinnyNode: SKShapeNode!
+  private var backAnim: SKSpriteNode!
+  private var player: SKSpriteNode!
+  private var player1: SKSpriteNode!
+  private var coin: SKSpriteNode!
+  private var coin1: SKSpriteNode!
   
   public override func didMove(to view: SKView) {
-    // Get label node from scene and store it for use later
-    label = childNode(withName: "//helloLabel") as? SKLabelNode
-    label.alpha = 0.0
-    let fadeInOut = SKAction.sequence([.fadeIn(withDuration: 2.0),
-                                       .fadeOut(withDuration: 2.0)])
-    label.run(.repeatForever(fadeInOut))
     
     backAnim = childNode(withName: "//payoffAnim") as? SKSpriteNode
-    backAnim.run(SKAction(named: "machineAnimation")!)
-    // Create shape node to use during mouse interaction
-    let w = (size.width + size.height) * 0.05
+    player = childNode(withName: "//player") as? SKSpriteNode
+    player1 = childNode(withName: "//player1") as? SKSpriteNode
+    coin = childNode(withName: "//coin") as? SKSpriteNode
     
-    spinnyNode = SKShapeNode(rectOf: CGSize(width: w, height: w), cornerRadius: w * 0.3)
-    spinnyNode.lineWidth = 2.5
+  }
+  
+  func startMachine() {
+     backAnim.run(SKAction.repeat(SKAction(named: "machineAnimation")! , count: 1))
+  }
+  
+  func playerAnimation() {
+    let actionPlayer =  SKAction(named : "playerMoveJump")!
+    let actionCoin = SKAction(named : "coinCooperate")!
+    let wait = SKAction.wait(forDuration:3.2)
     
-    let fadeAndRemove = SKAction.sequence([.wait(forDuration: 0.5),
-                                           .fadeOut(withDuration: 0.5),
-                                           .removeFromParent()])
-    spinnyNode.run(.repeatForever(.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-    spinnyNode.run(fadeAndRemove)
-  }
-  
-  func touchDown(atPoint pos : CGPoint) {
-    guard let n = spinnyNode.copy() as? SKShapeNode else { return }
+    let action = SKAction.run {
+      self.coin.run(actionCoin)
+      self.player.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer]))
+    }
     
-    n.position = pos
-    n.strokeColor = SKColor.green
-    addChild(n)
+    run(SKAction.repeat(SKAction.sequence([wait, action]) , count: 1))
   }
   
-  func touchMoved(toPoint pos : CGPoint) {
-    guard let n = self.spinnyNode.copy() as? SKShapeNode else { return }
-    
-    n.position = pos
-    n.strokeColor = SKColor.blue
-    addChild(n)
-  }
-  
-  func touchUp(atPoint pos : CGPoint) {
-    guard let n = spinnyNode.copy() as? SKShapeNode else { return }
-    
-    n.position = pos
-    n.strokeColor = SKColor.red
-    addChild(n)
-  }
-  
-  public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-    for t in touches { touchMoved(toPoint: t.location(in: self)) }
-  }
-  
-  public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-    for t in touches { touchUp(atPoint: t.location(in: self)) }
-  }
-  
-  public override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-    for t in touches { touchUp(atPoint: t.location(in: self)) }
-  }
-  
-  public override func update(_ currentTime: TimeInterval) {
-    // Called before each frame is rendered
-  }
 }
