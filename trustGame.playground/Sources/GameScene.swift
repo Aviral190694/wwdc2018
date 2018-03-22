@@ -1,11 +1,12 @@
 import Foundation
 import SpriteKit
+import UIKit
 
 public class GameScene: SKScene {
   
   private var label: SKLabelNode!
   private var spinnyNode: SKShapeNode!
-  private var backAnim: SKSpriteNode!
+  private var machineAnim: SKSpriteNode!
   private var player: SKSpriteNode!
   private var player1: SKSpriteNode!
   private var coin: SKSpriteNode!
@@ -15,13 +16,32 @@ public class GameScene: SKScene {
   private var cheatCooperate: Button!
   private var allCheat: Button!
   
+  private var youCheatLabel: SKLabelNode!
+  private var youCooperateLabel: SKLabelNode!
+  private var theyCooperateLabel: SKLabelNode!
+  private var theyCheatLabel: SKLabelNode!
   
   public override func didMove(to view: SKView) {
     
-    backAnim = childNode(withName: "//payoffAnim") as? SKSpriteNode
+    machineAnim = childNode(withName: "//payoffAnim") as? SKSpriteNode
     player = childNode(withName: "//player") as? SKSpriteNode
     player1 = childNode(withName: "//player1") as? SKSpriteNode
     coin = childNode(withName: "//coin") as? SKSpriteNode
+    
+    youCheatLabel = childNode(withName: "//youCheat") as? SKLabelNode
+    youCooperateLabel = childNode(withName: "//youCooperate") as? SKLabelNode
+    theyCheatLabel = childNode(withName: "//theyCheat") as? SKLabelNode
+    theyCooperateLabel = childNode(withName: "//theyCooperate") as? SKLabelNode
+    
+    
+   
+//    changeColorLabel(colorLabel: youCooperateLabel, changeColor: UIColor(red: 255.0/255.0,green: 230.0/255.0, blue: 99.0/255.0,alpha: 1))
+    addButtons()
+    startMachine()
+    
+  }
+  
+  func addButtons() {
     
     allCooperate = Button()
     allCooperate.position = CGPoint(x: 349.01 , y: 208.675)
@@ -51,14 +71,24 @@ public class GameScene: SKScene {
     allCheat.addTextNode(text: "All Cheat")
     allCheat.setButtonType(buttonType: ButtonTypes.allCheat)
     
+  }
+  
+  func changeColorLabel(colorLabel: SKLabelNode, changeColor : UIColor) {
+    print(colorLabel)
+    let paragraphStyle = NSMutableParagraphStyle()
+    paragraphStyle.alignment = .center
     
+    let newString = NSMutableAttributedString(string: colorLabel.attributedText!.string, attributes: [NSAttributedStringKey.paragraphStyle: paragraphStyle])
     
-    startMachine()
+    newString.addAttribute(NSAttributedStringKey.foregroundColor, value: changeColor , range: NSMakeRange(0,colorLabel.attributedText!.length))
+    
+      newString.addAttribute( NSAttributedStringKey.font, value: UIFont(name: "HelveticaNeue-Medium", size: 18.0)!, range: NSMakeRange(0,colorLabel.attributedText!.length))
+    
+    colorLabel.attributedText = newString
   }
   
   func startMachine() {
-     backAnim.run(SKAction.repeat(SKAction(named: "machineAnimation")! , count: 1))
-    playerAnimation()
+    machineAnim.run(SKAction.repeat(SKAction(named: "machineAnimation")! , count: 1))
   }
   
   func playerAnimation() {
