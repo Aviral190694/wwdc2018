@@ -1,6 +1,7 @@
 import Foundation
 import SpriteKit
 import UIKit
+import GameKit
 
 public class GameScene: SKScene {
   
@@ -11,6 +12,7 @@ public class GameScene: SKScene {
   private var player1: SKSpriteNode!
   private var coin: SKSpriteNode!
   private var coin1: SKSpriteNode!
+  
   private var allCooperate: Button!
   private var cooperateCheat: Button!
   private var cheatCooperate: Button!
@@ -21,7 +23,12 @@ public class GameScene: SKScene {
   private var theyCooperateLabel: SKLabelNode!
   private var theyCheatLabel: SKLabelNode!
   
+  private var playerMood: PlayerMood!
+  private var player1Mood: PlayerMood!
+  
   public override func didMove(to view: SKView) {
+    
+    
     
     machineAnim = childNode(withName: "//payoffAnim") as? SKSpriteNode
     player = childNode(withName: "//player") as? SKSpriteNode
@@ -33,12 +40,101 @@ public class GameScene: SKScene {
     theyCheatLabel = childNode(withName: "//theyCheat") as? SKLabelNode
     theyCooperateLabel = childNode(withName: "//theyCooperate") as? SKLabelNode
     
-    
-   
+    playerMood = .normal
+    player1Mood = .sad
+    setPlayerMode(currentPlayer : player, playerMood : .normal, image: "player")
+    setPlayerMode(currentPlayer : player1, playerMood : .sad, image: "player")
 //    changeColorLabel(colorLabel: youCooperateLabel, changeColor: UIColor(red: 255.0/255.0,green: 230.0/255.0, blue: 99.0/255.0,alpha: 1))
+//  machineAnim.texture = SKTexture(imageNamed: "payoff7.png")
+    
     addButtons()
     startMachine()
     
+  }
+  
+  func setPlayerMode(currentPlayer : SKSpriteNode, playerMood : PlayerMood, image: String) {
+    var texture1 = [SKTexture]()
+    var texture2 = [SKTexture]()
+    switch playerMood {
+    case .normal:
+      currentPlayer.texture = SKTexture(imageNamed: image + "0.png")
+      texture1 = [SKTexture(imageNamed: "player0.png"),
+                             SKTexture(imageNamed: image + "1.png"),
+                             SKTexture(imageNamed: image + "0.png")]
+ 
+      texture2 = [SKTexture(imageNamed: image + "0.png"),
+                             SKTexture(imageNamed: image + "1.png"),
+                             SKTexture(imageNamed: image + "0.png"),
+                             SKTexture(imageNamed: image + "1.png"),
+                             SKTexture(imageNamed: image + "0.png")]
+    case .happy:
+      currentPlayer.texture = SKTexture(imageNamed: image + "2.png")
+      texture1 = [SKTexture(imageNamed: image + "2.png"),
+                             SKTexture(imageNamed: image + "3.png"),
+                             SKTexture(imageNamed: image + "2.png")]
+      
+      texture2 = [SKTexture(imageNamed: image + "2.png"),
+                             SKTexture(imageNamed: image + "3.png"),
+                             SKTexture(imageNamed: image + "2.png"),
+                             SKTexture(imageNamed: image + "3.png"),
+                             SKTexture(imageNamed: image + "2.png")]
+    case .angry:
+      currentPlayer.texture = SKTexture(imageNamed: image + "4.png")
+      texture1 = [SKTexture(imageNamed: image + "4.png"),
+                  SKTexture(imageNamed: image + "5.png"),
+                  SKTexture(imageNamed: image + "4.png")]
+      
+      texture2 = [SKTexture(imageNamed: image + "4.png"),
+                  SKTexture(imageNamed: image + "5.png"),
+                  SKTexture(imageNamed: image + "4.png"),
+                  SKTexture(imageNamed: image + "5.png"),
+                  SKTexture(imageNamed: image + "4.png")]
+    case .sad:
+      currentPlayer.texture = SKTexture(imageNamed: image + "6.png")
+      texture1 = [SKTexture(imageNamed: image + "6.png"),
+                  SKTexture(imageNamed: image + "7.png"),
+                  SKTexture(imageNamed: image + "6.png")]
+      
+      texture2 = [SKTexture(imageNamed: image + "6.png"),
+                  SKTexture(imageNamed: image + "7.png"),
+                  SKTexture(imageNamed: image + "6.png"),
+                  SKTexture(imageNamed: image + "7.png"),
+                  SKTexture(imageNamed: image + "6.png")]
+    case .swag:
+      currentPlayer.texture = SKTexture(imageNamed: image + "8.png")
+      texture1 = [SKTexture(imageNamed: image + "6.png"),
+                  SKTexture(imageNamed: image + "7.png"),
+                  SKTexture(imageNamed: image + "6.png")]
+      
+      texture2 = [SKTexture(imageNamed: image + "6.png"),
+                  SKTexture(imageNamed: image + "7.png"),
+                  SKTexture(imageNamed: image + "6.png"),
+                  SKTexture(imageNamed: image + "7.png"),
+                  SKTexture(imageNamed: image + "6.png")]
+    }
+    
+    animateIdle(currentPlayer: currentPlayer, texture1: texture1, texture2: texture2)
+    
+  }
+  
+  func animateIdle(currentPlayer : SKSpriteNode, texture1: [SKTexture] , texture2: [SKTexture]) {
+    currentPlayer.removeAllActions()
+    let wait = SKAction.wait(forDuration:3, withRange: 2)
+    let runAction = SKAction.run {
+      let randomIndex = GKRandomSource.sharedRandom().nextInt(upperBound: 3)
+      if randomIndex == 0 {
+        let texture = SKAction.animate(with: texture1, timePerFrame: 0.2)
+        currentPlayer.run(texture)
+      } else if randomIndex == 1 {
+        let texture1 = SKAction.animate(with: texture2, timePerFrame: 0.2)
+        currentPlayer.run(texture1)
+      } else {
+        let texture = SKAction.animate(with: texture1, timePerFrame: 0.2)
+        let jump = SKAction(named: "jump")!
+        currentPlayer.run(SKAction.group([texture,jump]))
+      }
+    }
+    currentPlayer.run(SKAction.repeatForever(SKAction.sequence([wait,runAction])))
   }
   
   func addButtons() {
@@ -79,7 +175,6 @@ public class GameScene: SKScene {
     paragraphStyle.alignment = .center
     
     let newString = NSMutableAttributedString(string: colorLabel.attributedText!.string, attributes: [NSAttributedStringKey.paragraphStyle: paragraphStyle])
-    
     newString.addAttribute(NSAttributedStringKey.foregroundColor, value: changeColor , range: NSMakeRange(0,colorLabel.attributedText!.length))
     
       newString.addAttribute( NSAttributedStringKey.font, value: UIFont(name: "HelveticaNeue-Medium", size: 18.0)!, range: NSMakeRange(0,colorLabel.attributedText!.length))
@@ -104,10 +199,26 @@ public class GameScene: SKScene {
     run(SKAction.repeat(SKAction.sequence([wait, action]) , count: 1))
   }
   
+  func deactiveAllButton() {
+    allCheat.isUserInteractionEnabled = false
+    allCooperate.isUserInteractionEnabled = false
+    cheatCooperate.isUserInteractionEnabled = false
+    cooperateCheat.isUserInteractionEnabled = false
+  }
+  
+  func activateAllButton() {
+    allCheat.isUserInteractionEnabled = true
+    allCooperate.isUserInteractionEnabled = true
+    cheatCooperate.isUserInteractionEnabled = true
+    cooperateCheat.isUserInteractionEnabled = true
+  }
+  
 }
 
 extension GameScene: ButtonDelegate {
   func didTap(sender: Button, type: ButtonTypes) {
     print("Tapped", type)
+    sender.texture = SKTexture(imageNamed: "buttonDeactivated.png")
+    sender.textNode.fontColor = SKColor.gray
   }
 }

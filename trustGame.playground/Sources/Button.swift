@@ -14,6 +14,7 @@ public class Button: SKSpriteNode {
   
   weak var delegate: ButtonDelegate?
   private var type: ButtonTypes!
+  var textNode: SKLabelNode!
   
   // MARK: Lifecycle
   
@@ -30,7 +31,7 @@ public class Button: SKSpriteNode {
   }
   
   func addTextNode(text: String) {
-    let textNode = SKLabelNode(fontNamed: "HelveticaNeue-Bold")
+    textNode = SKLabelNode(fontNamed: "HelveticaNeue-Bold")
     textNode.text = text
     textNode.zPosition = 2
     textNode.fontSize = 24
@@ -52,6 +53,8 @@ public class Button: SKSpriteNode {
   public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
     super.touchesBegan(touches, with: event)
     alpha = 0.5
+    let action = SKAction.playSoundFileNamed("button1.mp3", waitForCompletion: false)
+    run(action)
     self.texture = SKTexture(imageNamed: "buttonDeactivated.png")
   }
   
