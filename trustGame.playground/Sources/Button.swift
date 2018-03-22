@@ -4,15 +4,16 @@ import SpriteKit
 
 // MARK: Play Button Delegate
 
-protocol PlayButtonDelegate: class {
-  func didTapPlay(sender: PlayButton)
+protocol ButtonDelegate: class {
+  func didTap(sender: Button, type: ButtonTypes)
 }
 
-public class PlayButton: SKSpriteNode {
+public class Button: SKSpriteNode {
   
   // MARK: Properties
   
-  weak var delegate: PlayButtonDelegate?
+  weak var delegate: ButtonDelegate?
+  private var type: ButtonTypes!
   
   // MARK: Lifecycle
   
@@ -20,11 +21,26 @@ public class PlayButton: SKSpriteNode {
     let texture = SKTexture(imageNamed: "buttonNormal.png")
 
     let color = SKColor.clear
-    let size = CGSize(width: 320, height: 60)
+    let size = CGSize(width: 250, height: 60)
     super.init(texture: texture, color: color, size: size)
 //
     isUserInteractionEnabled = true
     zPosition = 1
+    type = .allCooperate
+  }
+  
+  func addTextNode(text: String) {
+    let textNode = SKLabelNode(fontNamed: "HelveticaNeue-Bold")
+    textNode.text = text
+    textNode.zPosition = 2
+    textNode.fontSize = 24
+    textNode.fontColor = SKColor.black
+    textNode.position = CGPoint(x: 0 , y: -10)
+    addChild(textNode)
+  }
+  
+  func setButtonType(buttonType : ButtonTypes) {
+    type = buttonType
   }
   
   required public init?(coder aDecoder: NSCoder) {
@@ -36,7 +52,7 @@ public class PlayButton: SKSpriteNode {
   public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
     super.touchesBegan(touches, with: event)
     alpha = 0.5
-    print("Touched")
+    self.texture = SKTexture(imageNamed: "buttonDeactivated.png")
   }
   
   public override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -50,7 +66,7 @@ public class PlayButton: SKSpriteNode {
     super.touchesEnded(touches, with: event)
     performButtonAppearanceResetAnimation()
     
-    delegate?.didTapPlay(sender: self)
+    delegate?.didTap(sender: self, type: type)
   }
   
   public override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -63,6 +79,7 @@ public class PlayButton: SKSpriteNode {
   func performButtonAppearanceResetAnimation() {
     let alphaAction = SKAction.fadeAlpha(to: 1.0, duration: 0.10)
     alphaAction.timingMode = .easeInEaseOut
+    self.texture = SKTexture(imageNamed: "buttonNormal.png")
     run(alphaAction)
   }
   
