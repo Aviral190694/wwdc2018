@@ -29,6 +29,12 @@ public class GameScene: SKScene {
   private var coinPosition: CGPoint!
   private var coin1Position: CGPoint!
   
+  private var coinGiveAway: SKSpriteNode!
+  private var coinGiveAway1: SKSpriteNode!
+  private var coinGiveAway2: SKSpriteNode!
+  private var coinGiveAwayAi: SKSpriteNode!
+  private var coinGiveAwayAi1: SKSpriteNode!
+  private var coinGiveAwayAi2: SKSpriteNode!
   
   public override func didMove(to view: SKView) {
     
@@ -37,6 +43,13 @@ public class GameScene: SKScene {
     player1 = childNode(withName: "//player1") as? SKSpriteNode
     coin = childNode(withName: "//coin") as? SKSpriteNode
     coin1 = childNode(withName: "//coin1") as? SKSpriteNode
+    coinGiveAway = childNode(withName: "//coinPlayMachine") as? SKSpriteNode
+    coinGiveAway1 = childNode(withName: "//coinPlayMachine1") as? SKSpriteNode
+    coinGiveAway2 = childNode(withName: "//coinPlayMachine2") as? SKSpriteNode
+    
+    coinGiveAwayAi = childNode(withName: "//coinPlayMachineAi") as? SKSpriteNode
+    coinGiveAwayAi1 = childNode(withName: "//coinPlayMachineAi1") as? SKSpriteNode
+    coinGiveAwayAi2 = childNode(withName: "//coinPlayMachineAi2") as? SKSpriteNode
     
     youCheatLabel = childNode(withName: "//youCheat") as? SKLabelNode
     youCooperateLabel = childNode(withName: "//youCooperate") as? SKLabelNode
@@ -264,15 +277,26 @@ public class GameScene: SKScene {
     let actionPlayer1 = SKAction(named : "playerMoveJump1")!
     let actionCoin1 = SKAction(named : "coinCooperate1")!
     let wait = SKAction.wait(forDuration:0.1)
+    let give = SKAction(named : "coinGive", duration: 0.8)!
+   let giveAi = SKAction(named : "coinGive1", duration: 0.8)!
     
     let action = SKAction.run {
       self.player.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer]))
       self.coin.run(actionCoin, completion: {
         self.changePlayerTexture(currentPlayer: self.player, texture: "player10.png")
         let changeAction = SKAction.run {
-          self.setPlayerMode(currentPlayer : self.player, playerMood : .happy, image: "player")
-          self.player.position = CGPoint(x: 97.058,y: 391.391)
-          self.coin.position = CGPoint(x: 130.471,y: 319.144)
+          
+          self.coinGiveAway.run(give)
+          self.coinGiveAway1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),
+                                                    give]), completion: {
+                                                      self.coinGiveAway.position = CGPoint(x: 323.65,y: 340.443)
+                                                      self.coinGiveAway1.position = CGPoint(x: 323.65,y: 340.443)
+                                                      self.setPlayerMode(currentPlayer : self.player, playerMood : .happy, image: "player")
+                                                      self.player.position = CGPoint(x: 97.058,y: 391.391)
+                                                      self.coin.position = CGPoint(x: 130.471,y: 319.144)
+                                                      self.activateAllButton()
+          })
+          
         }
         self.player.run(SKAction.sequence([actionPlayer1,wait,changeAction]))
       })
@@ -281,10 +305,17 @@ public class GameScene: SKScene {
       self.coin1.run(actionCoin1, completion: {
         self.changePlayerTexture(currentPlayer: self.player1, texture: "player10.png")
         let changeAction = SKAction.run {
-          self.setPlayerMode(currentPlayer : self.player1, playerMood : .happy, image: "player")
-          self.player1.position = CGPoint(x: 924.971,y: 391.391)
-          self.coin1.position = CGPoint(x: 883.623,y: 319.208)
-          self.activateAllButton()
+         
+          self.coinGiveAwayAi.run(giveAi)
+          self.coinGiveAwayAi1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),
+                                                      giveAi]), completion: {
+                                                        self.setPlayerMode(currentPlayer : self.player1, playerMood : .happy, image: "player")
+                                                        self.player1.position = CGPoint(x: 924.971,y: 391.391)
+                                                        self.coin1.position = CGPoint(x: 883.623,y: 319.208)
+                                                        self.coinGiveAwayAi.position = CGPoint(x: 700.995,y: 340.443)
+                                                        self.coinGiveAwayAi1.position = CGPoint(x: 700.995,y: 340.443)
+          })
+          
         }
         self.player1.run(SKAction.sequence([actionPlayer,wait,changeAction]))
       })
