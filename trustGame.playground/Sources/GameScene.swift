@@ -231,20 +231,14 @@ public class GameScene: SKScene {
     if player1Action == .cooperate {
       if player2Action == .cooperate {
         playerAllCooperateAnimation()
-        //        self.setPlayerMode(currentPlayer : self.player, playerMood : .happy, image: "player")
-        //        self.setPlayerMode(currentPlayer : self.player1, playerMood : .happy, image: "player")
-        
       } else {
-        setPlayerMode(currentPlayer : player, playerMood : .sad, image: "player")
-        setPlayerMode(currentPlayer : player1, playerMood : .swag, image: "player")
+        playerCooperateCheatAnimation()
       }
     } else {
       if player2Action == .cooperate {
-        setPlayerMode(currentPlayer : player, playerMood : .swag, image: "player")
-        setPlayerMode(currentPlayer : player1, playerMood : .sad, image: "player")
+        playerCheatCooperateAnimation()
       } else {
-        setPlayerMode(currentPlayer : player, playerMood : .angry, image: "player")
-        setPlayerMode(currentPlayer : player1, playerMood : .angry, image: "player")
+        playerAllCheatAnimation()
       }
     }
     
@@ -265,7 +259,7 @@ public class GameScene: SKScene {
     let action = SKAction.run {
       self.player.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer]))
       self.coin.run(actionCoin, completion: {
-       self.changePlayerTexture(currentPlayer: self.player, texture: "player10.png")
+        self.changePlayerTexture(currentPlayer: self.player, texture: "player10.png")
         let changeAction = SKAction.run {
           self.setPlayerMode(currentPlayer : self.player, playerMood : .happy, image: "player")
           self.coin.position = CGPoint(x: 130.471,y: 319.144)
@@ -286,6 +280,143 @@ public class GameScene: SKScene {
     }
     run(SKAction.sequence([wait, action]))
   }
+  
+  func playerAllCheatAnimation() {
+    let actionPlayer =  SKAction(named : "playerMoveJump")!
+    let actionCoin = SKAction(named : "coinCheat")!
+    let actionPlayer1 = SKAction(named : "playerMoveJump1")!
+    let actionCoin1 = SKAction(named : "coinCheat1")!
+    let wait = SKAction.wait(forDuration:0.1)
+    
+    let action = SKAction.run {
+      self.player.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer]))
+      self.coin.run(actionCoin, completion: {
+        self.changePlayerTexture(currentPlayer: self.player, texture: "player11.png")
+        let changeAction = SKAction.run {
+          self.setPlayerMode(currentPlayer : self.player, playerMood : .angry, image: "player")
+          
+        }
+        self.player.run(SKAction.sequence([actionPlayer1,wait,changeAction]))
+        self.coin.run(SKAction.sequence([actionPlayer1,
+                                         SKAction.group([SKAction.moveBy(x: -40.0,y: -90.0,duration: 0.25),
+                                                         SKAction.sequence([SKAction.wait(forDuration:0.18),
+                                                                            SKAction.fadeOut(withDuration:0.1)])
+                                          ])
+          ]), completion: {
+            self.coin.position = CGPoint(x: 130.471,y: 319.144)
+            
+        })
+      })
+      
+      self.player1.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer1]))
+      self.coin1.run(actionCoin1, completion: {
+        self.changePlayerTexture(currentPlayer: self.player1, texture: "player11.png")
+        let changeAction = SKAction.run {
+          self.setPlayerMode(currentPlayer : self.player1, playerMood : .angry, image: "player")
+          
+        }
+        self.player1.run(SKAction.sequence([actionPlayer,wait,changeAction]))
+        self.coin1.run(SKAction.sequence([actionPlayer,
+                                         SKAction.group([SKAction.moveBy(x: 40.0,y: -90.0,duration: 0.25),
+                                                         SKAction.sequence([SKAction.wait(forDuration:0.18),
+                                                                            SKAction.fadeOut(withDuration:0.1)])
+                                          ])
+          ]), completion: {
+            self.coin1.position = CGPoint(x: 883.623,y: 319.208)
+            
+        })
+      })
+      
+    }
+    run(SKAction.sequence([wait, action]))
+  }
+  
+  func playerCooperateCheatAnimation() {
+    let actionPlayer =  SKAction(named : "playerMoveJump")!
+    let actionCoinCheat = SKAction(named : "coinCheat")!
+    let actionPlayer1 = SKAction(named : "playerMoveJump1")!
+    let actionCoin1Cheat = SKAction(named : "coinCheat1")!
+    let actionCoinCooperate = SKAction(named : "coinCooperate")!
+    let actionCoin1Cooperate = SKAction(named : "coinCooperate1")!
+    let wait = SKAction.wait(forDuration:0.1)
+    
+    let action = SKAction.run {
+      self.player.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer]))
+      self.coin.run(actionCoinCooperate, completion: {
+        self.changePlayerTexture(currentPlayer: self.player, texture: "player12.png")
+        let changeAction = SKAction.run {
+          self.setPlayerMode(currentPlayer : self.player, playerMood : .sad, image: "player")
+          self.coin.position = CGPoint(x: 130.471,y: 319.144)
+        }
+        self.player.run(SKAction.sequence([actionPlayer1,wait,changeAction]))
+        self.changePlayerTexture(currentPlayer: self.player1, texture: "player13.png")
+        let changeAction1 = SKAction.run {
+          self.setPlayerMode(currentPlayer : self.player1, playerMood : .swag, image: "player")
+          
+        }
+        self.player1.run(SKAction.sequence([actionPlayer,wait,changeAction1]))
+        self.coin1.run(SKAction.sequence([actionPlayer,
+                                          SKAction.group([SKAction.moveBy(x: 40.0,y: -90.0,duration: 0.25),
+                                                          SKAction.sequence([SKAction.wait(forDuration:0.18),
+                                                                             SKAction.fadeOut(withDuration:0.1)])
+                                            ])
+          ]), completion: {
+            self.coin1.position = CGPoint(x: 883.623,y: 319.208)
+            
+        })
+      })
+      
+      self.player1.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer1]))
+      self.coin1.run(actionCoin1Cheat)
+      
+    }
+    run(SKAction.sequence([wait, action]))
+  }
+  
+  func playerCheatCooperateAnimation() {
+    let actionPlayer =  SKAction(named : "playerMoveJump")!
+    let actionCoinCheat = SKAction(named : "coinCheat")!
+    let actionPlayer1 = SKAction(named : "playerMoveJump1")!
+    let actionCoin1Cheat = SKAction(named : "coinCheat1")!
+    let actionCoinCooperate = SKAction(named : "coinCooperate")!
+    let actionCoin1Cooperate = SKAction(named : "coinCooperate1")!
+    let wait = SKAction.wait(forDuration:0.1)
+    
+    let action = SKAction.run {
+      self.player.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer]))
+      self.coin.run(actionCoinCheat)
+      
+      self.player1.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer1]))
+      self.coin1.run(actionCoin1Cooperate, completion: {
+        
+        self.changePlayerTexture(currentPlayer: self.player, texture: "player13.png")
+        let changeAction = SKAction.run {
+          self.setPlayerMode(currentPlayer : self.player, playerMood : .swag, image: "player")
+          
+        }
+        self.player.run(SKAction.sequence([actionPlayer1,wait,changeAction]))
+        self.coin.run(SKAction.sequence([actionPlayer1,
+                                         SKAction.group([SKAction.moveBy(x: -40.0,y: -90.0,duration: 0.25),
+                                                         SKAction.sequence([SKAction.wait(forDuration:0.18),
+                                                                            SKAction.fadeOut(withDuration:0.1)])
+                                          ])
+          ]), completion: {
+            self.coin.position = CGPoint(x: 130.471,y: 319.144)
+            
+        })
+        
+        self.changePlayerTexture(currentPlayer: self.player1, texture: "player12.png")
+        let changeAction1 = SKAction.run {
+          self.setPlayerMode(currentPlayer : self.player1, playerMood : .sad, image: "player")
+          self.coin1.position = CGPoint(x: 883.623,y: 319.208)
+        }
+        self.player1.run(SKAction.sequence([actionPlayer,wait,changeAction1]))
+      })
+      
+    }
+    run(SKAction.sequence([wait, action]))
+  }
+  
   
 }
 
