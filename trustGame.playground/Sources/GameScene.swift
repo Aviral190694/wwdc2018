@@ -28,8 +28,6 @@ public class GameScene: SKScene {
   
   public override func didMove(to view: SKView) {
     
-    
-    
     machineAnim = childNode(withName: "//payoffAnim") as? SKSpriteNode
     player = childNode(withName: "//player") as? SKSpriteNode
     player1 = childNode(withName: "//player1") as? SKSpriteNode
@@ -44,8 +42,8 @@ public class GameScene: SKScene {
     player1Mood = .sad
     setPlayerMode(currentPlayer : player, playerMood : .normal, image: "player")
     setPlayerMode(currentPlayer : player1, playerMood : .sad, image: "player")
-//    changeColorLabel(colorLabel: youCooperateLabel, changeColor: UIColor(red: 255.0/255.0,green: 230.0/255.0, blue: 99.0/255.0,alpha: 1))
-//  machineAnim.texture = SKTexture(imageNamed: "payoff7.png")
+    //    changeColorLabel(colorLabel: youCooperateLabel, changeColor: UIColor(red: 255.0/255.0,green: 230.0/255.0, blue: 99.0/255.0,alpha: 1))
+    //  machineAnim.texture = SKTexture(imageNamed: "payoff7.png")
     
     addButtons()
     startMachine()
@@ -59,25 +57,25 @@ public class GameScene: SKScene {
     case .normal:
       currentPlayer.texture = SKTexture(imageNamed: image + "0.png")
       texture1 = [SKTexture(imageNamed: "player0.png"),
-                             SKTexture(imageNamed: image + "1.png"),
-                             SKTexture(imageNamed: image + "0.png")]
- 
+                  SKTexture(imageNamed: image + "1.png"),
+                  SKTexture(imageNamed: image + "0.png")]
+      
       texture2 = [SKTexture(imageNamed: image + "0.png"),
-                             SKTexture(imageNamed: image + "1.png"),
-                             SKTexture(imageNamed: image + "0.png"),
-                             SKTexture(imageNamed: image + "1.png"),
-                             SKTexture(imageNamed: image + "0.png")]
+                  SKTexture(imageNamed: image + "1.png"),
+                  SKTexture(imageNamed: image + "0.png"),
+                  SKTexture(imageNamed: image + "1.png"),
+                  SKTexture(imageNamed: image + "0.png")]
     case .happy:
       currentPlayer.texture = SKTexture(imageNamed: image + "2.png")
       texture1 = [SKTexture(imageNamed: image + "2.png"),
-                             SKTexture(imageNamed: image + "3.png"),
-                             SKTexture(imageNamed: image + "2.png")]
+                  SKTexture(imageNamed: image + "3.png"),
+                  SKTexture(imageNamed: image + "2.png")]
       
       texture2 = [SKTexture(imageNamed: image + "2.png"),
-                             SKTexture(imageNamed: image + "3.png"),
-                             SKTexture(imageNamed: image + "2.png"),
-                             SKTexture(imageNamed: image + "3.png"),
-                             SKTexture(imageNamed: image + "2.png")]
+                  SKTexture(imageNamed: image + "3.png"),
+                  SKTexture(imageNamed: image + "2.png"),
+                  SKTexture(imageNamed: image + "3.png"),
+                  SKTexture(imageNamed: image + "2.png")]
     case .angry:
       currentPlayer.texture = SKTexture(imageNamed: image + "4.png")
       texture1 = [SKTexture(imageNamed: image + "4.png"),
@@ -144,28 +142,28 @@ public class GameScene: SKScene {
     allCooperate.delegate = self
     addChild(allCooperate)
     allCooperate.addTextNode(text: "All Cooperate")
-    allCooperate.setButtonType(buttonType: ButtonTypes.allCooperate)
+    allCooperate.setButtonType(buttonType: .allCooperate)
     
     cooperateCheat = Button()
     cooperateCheat.position = CGPoint(x: 661.484 , y: 208.675)
     cooperateCheat.delegate = self
     addChild(cooperateCheat)
     cooperateCheat.addTextNode(text: "Cooperate - Cheat")
-    cooperateCheat.setButtonType(buttonType: ButtonTypes.cooperateCheat)
+    cooperateCheat.setButtonType(buttonType: .cooperateCheat)
     
     cheatCooperate = Button()
     cheatCooperate.position = CGPoint(x: 349.01 , y: 97.728)
     cheatCooperate.delegate = self
     addChild(cheatCooperate)
     cheatCooperate.addTextNode(text: "Cheat - Cooperate")
-    cheatCooperate.setButtonType(buttonType: ButtonTypes.cheatCooperate)
+    cheatCooperate.setButtonType(buttonType: .cheatCooperate)
     
     allCheat = Button()
     allCheat.position = CGPoint(x: 661.484 , y: 97.728)
     allCheat.delegate = self
     addChild(allCheat)
     allCheat.addTextNode(text: "All Cheat")
-    allCheat.setButtonType(buttonType: ButtonTypes.allCheat)
+    allCheat.setButtonType(buttonType: .allCheat)
     
   }
   
@@ -177,7 +175,7 @@ public class GameScene: SKScene {
     let newString = NSMutableAttributedString(string: colorLabel.attributedText!.string, attributes: [NSAttributedStringKey.paragraphStyle: paragraphStyle])
     newString.addAttribute(NSAttributedStringKey.foregroundColor, value: changeColor , range: NSMakeRange(0,colorLabel.attributedText!.length))
     
-      newString.addAttribute( NSAttributedStringKey.font, value: UIFont(name: "HelveticaNeue-Medium", size: 18.0)!, range: NSMakeRange(0,colorLabel.attributedText!.length))
+    newString.addAttribute( NSAttributedStringKey.font, value: UIFont(name: "HelveticaNeue-Medium", size: 18.0)!, range: NSMakeRange(0,colorLabel.attributedText!.length))
     
     colorLabel.attributedText = newString
   }
@@ -186,18 +184,7 @@ public class GameScene: SKScene {
     machineAnim.run(SKAction.repeat(SKAction(named: "machineAnimation")! , count: 1))
   }
   
-  func playerAnimation() {
-    let actionPlayer =  SKAction(named : "playerMoveJump")!
-    let actionCoin = SKAction(named : "coinCooperate")!
-    let wait = SKAction.wait(forDuration:3.2)
-    
-    let action = SKAction.run {
-      self.coin.run(actionCoin)
-      self.player.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer]))
-    }
-    
-    run(SKAction.repeat(SKAction.sequence([wait, action]) , count: 1))
-  }
+  
   
   func deactiveAllButton() {
     allCheat.isUserInteractionEnabled = false
@@ -213,12 +200,42 @@ public class GameScene: SKScene {
     cooperateCheat.isUserInteractionEnabled = true
   }
   
+  func gamePlay(sender: Button, type: ButtonType) {
+    switch type {
+    case .allCooperate:
+      print("Cooperating")
+      playerAnimation()
+    case .allCheat:
+      print("All cheat")
+    case .cooperateCheat:
+      print("cooperateCheat")
+    case .cheatCooperate:
+      print("cheatCooperate")
+    default:
+      print("Wrong Button")
+    }
+  }
+  
+  func playerAnimation() {
+    let actionPlayer =  SKAction(named : "playerMoveJump")!
+    let actionCoin = SKAction(named : "coinCooperate")!
+    let wait = SKAction.wait(forDuration:0.1)
+    
+    let action = SKAction.run {
+      self.coin.run(actionCoin)
+      self.player.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer]))
+    }
+    
+    run(SKAction.sequence([wait, action]))
+  }
+  
 }
 
 extension GameScene: ButtonDelegate {
-  func didTap(sender: Button, type: ButtonTypes) {
+  func didTap(sender: Button, type: ButtonType) {
     print("Tapped", type)
     sender.texture = SKTexture(imageNamed: "buttonDeactivated.png")
     sender.textNode.fontColor = SKColor.gray
+    gamePlay(sender: sender, type: type)
   }
 }

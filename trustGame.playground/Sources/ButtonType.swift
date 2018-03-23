@@ -1,6 +1,6 @@
 import Foundation
 
-public enum ButtonTypes {
+public enum ButtonType {
   case cooperate,
   cheat,
   allCooperate,

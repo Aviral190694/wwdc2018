@@ -5,7 +5,7 @@ import SpriteKit
 // MARK: Play Button Delegate
 
 protocol ButtonDelegate: class {
-  func didTap(sender: Button, type: ButtonTypes)
+  func didTap(sender: Button, type: ButtonType)
 }
 
 public class Button: SKSpriteNode {
@@ -13,7 +13,7 @@ public class Button: SKSpriteNode {
   // MARK: Properties
   
   weak var delegate: ButtonDelegate?
-  private var type: ButtonTypes!
+  private var type: ButtonType!
   var textNode: SKLabelNode!
   
   // MARK: Lifecycle
@@ -40,7 +40,7 @@ public class Button: SKSpriteNode {
     addChild(textNode)
   }
   
-  func setButtonType(buttonType : ButtonTypes) {
+  func setButtonType(buttonType : ButtonType) {
     type = buttonType
   }
   
