@@ -40,6 +40,16 @@ public class Button: SKSpriteNode {
     addChild(textNode)
   }
   
+  func setButtonNormal() {
+    self.texture = SKTexture(imageNamed: "buttonNormal.png")
+    self.textNode.fontColor = SKColor.black
+  }
+  
+  func setButtonDeactive() {
+    self.texture = SKTexture(imageNamed: "buttonDeactivated.png")
+    self.textNode.fontColor = SKColor.gray
+  }
+  
   func setButtonType(buttonType : ButtonType) {
     type = buttonType
   }

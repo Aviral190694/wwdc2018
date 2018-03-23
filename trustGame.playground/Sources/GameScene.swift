@@ -26,12 +26,17 @@ public class GameScene: SKScene {
   private var playerMood: PlayerMood!
   private var player1Mood: PlayerMood!
   
+  private var coinPosition: CGPoint!
+  private var coin1Position: CGPoint!
+  
+  
   public override func didMove(to view: SKView) {
     
     machineAnim = childNode(withName: "//payoffAnim") as? SKSpriteNode
     player = childNode(withName: "//player") as? SKSpriteNode
     player1 = childNode(withName: "//player1") as? SKSpriteNode
     coin = childNode(withName: "//coin") as? SKSpriteNode
+    coin1 = childNode(withName: "//coin1") as? SKSpriteNode
     
     youCheatLabel = childNode(withName: "//youCheat") as? SKLabelNode
     youCooperateLabel = childNode(withName: "//youCooperate") as? SKLabelNode
@@ -53,6 +58,7 @@ public class GameScene: SKScene {
   func setPlayerMode(currentPlayer : SKSpriteNode, playerMood : PlayerMood, image: String) {
     var texture1 = [SKTexture]()
     var texture2 = [SKTexture]()
+    currentPlayer.removeAllActions()
     switch playerMood {
     case .normal:
       currentPlayer.texture = SKTexture(imageNamed: image + "0.png")
@@ -100,15 +106,15 @@ public class GameScene: SKScene {
                   SKTexture(imageNamed: image + "6.png")]
     case .swag:
       currentPlayer.texture = SKTexture(imageNamed: image + "8.png")
-      texture1 = [SKTexture(imageNamed: image + "6.png"),
-                  SKTexture(imageNamed: image + "7.png"),
-                  SKTexture(imageNamed: image + "6.png")]
+      texture1 = [SKTexture(imageNamed: image + "8.png"),
+                  SKTexture(imageNamed: image + "9.png"),
+                  SKTexture(imageNamed: image + "8.png")]
       
-      texture2 = [SKTexture(imageNamed: image + "6.png"),
-                  SKTexture(imageNamed: image + "7.png"),
-                  SKTexture(imageNamed: image + "6.png"),
-                  SKTexture(imageNamed: image + "7.png"),
-                  SKTexture(imageNamed: image + "6.png")]
+      texture2 = [SKTexture(imageNamed: image + "8.png"),
+                  SKTexture(imageNamed: image + "9.png"),
+                  SKTexture(imageNamed: image + "8.png"),
+                  SKTexture(imageNamed: image + "9.png"),
+                  SKTexture(imageNamed: image + "8.png")]
     }
     
     animateIdle(currentPlayer: currentPlayer, texture1: texture1, texture2: texture2)
@@ -204,28 +210,80 @@ public class GameScene: SKScene {
     switch type {
     case .allCooperate:
       print("Cooperating")
-      playerAnimation()
+      playerAnimateCooperate(player1Action: .cooperate, player2Action: .cooperate)
     case .allCheat:
       print("All cheat")
+      playerAnimateCooperate(player1Action: .cheat, player2Action: .cheat)
     case .cooperateCheat:
       print("cooperateCheat")
+      playerAnimateCooperate(player1Action: .cooperate, player2Action: .cheat)
     case .cheatCooperate:
       print("cheatCooperate")
+      playerAnimateCooperate(player1Action: .cheat, player2Action: .cooperate)
     default:
       print("Wrong Button")
     }
+    sender.setButtonNormal()
   }
   
-  func playerAnimation() {
+  func playerAnimateCooperate(player1Action: PlayerAction, player2Action: PlayerAction) {
+    
+    if player1Action == .cooperate {
+      if player2Action == .cooperate {
+        playerAllCooperateAnimation()
+        //        self.setPlayerMode(currentPlayer : self.player, playerMood : .happy, image: "player")
+        //        self.setPlayerMode(currentPlayer : self.player1, playerMood : .happy, image: "player")
+        
+      } else {
+        setPlayerMode(currentPlayer : player, playerMood : .sad, image: "player")
+        setPlayerMode(currentPlayer : player1, playerMood : .swag, image: "player")
+      }
+    } else {
+      if player2Action == .cooperate {
+        setPlayerMode(currentPlayer : player, playerMood : .swag, image: "player")
+        setPlayerMode(currentPlayer : player1, playerMood : .sad, image: "player")
+      } else {
+        setPlayerMode(currentPlayer : player, playerMood : .angry, image: "player")
+        setPlayerMode(currentPlayer : player1, playerMood : .angry, image: "player")
+      }
+    }
+    
+  }
+  
+  func changePlayerTexture(currentPlayer: SKSpriteNode, texture: String) {
+    currentPlayer.removeAllActions()
+    currentPlayer.texture = SKTexture(imageNamed: texture)
+  }
+  
+  func playerAllCooperateAnimation() {
     let actionPlayer =  SKAction(named : "playerMoveJump")!
     let actionCoin = SKAction(named : "coinCooperate")!
+    let actionPlayer1 = SKAction(named : "playerMoveJump1")!
+    let actionCoin1 = SKAction(named : "coinCooperate1")!
     let wait = SKAction.wait(forDuration:0.1)
     
     let action = SKAction.run {
-      self.coin.run(actionCoin)
       self.player.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer]))
+      self.coin.run(actionCoin, completion: {
+       self.changePlayerTexture(currentPlayer: self.player, texture: "player10.png")
+        let changeAction = SKAction.run {
+          self.setPlayerMode(currentPlayer : self.player, playerMood : .happy, image: "player")
+          self.coin.position = CGPoint(x: 130.471,y: 319.144)
+        }
+        self.player.run(SKAction.sequence([actionPlayer1,wait,changeAction]))
+      })
+      
+      self.player1.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer1]))
+      self.coin1.run(actionCoin1, completion: {
+        self.changePlayerTexture(currentPlayer: self.player1, texture: "player10.png")
+        let changeAction = SKAction.run {
+          self.setPlayerMode(currentPlayer : self.player1, playerMood : .happy, image: "player")
+          self.coin1.position = CGPoint(x: 883.623,y: 319.208)
+        }
+        self.player1.run(SKAction.sequence([actionPlayer,wait,changeAction]))
+      })
+      
     }
-    
     run(SKAction.sequence([wait, action]))
   }
   
@@ -234,8 +292,7 @@ public class GameScene: SKScene {
 extension GameScene: ButtonDelegate {
   func didTap(sender: Button, type: ButtonType) {
     print("Tapped", type)
-    sender.texture = SKTexture(imageNamed: "buttonDeactivated.png")
-    sender.textNode.fontColor = SKColor.gray
+    sender.setButtonDeactive()
     gamePlay(sender: sender, type: type)
   }
 }
