@@ -62,7 +62,7 @@ public class GameScene: SKScene {
     switch playerMood {
     case .normal:
       currentPlayer.texture = SKTexture(imageNamed: image + "0.png")
-      texture1 = [SKTexture(imageNamed: "player0.png"),
+      texture1 = [SKTexture(imageNamed: image + "0.png"),
                   SKTexture(imageNamed: image + "1.png"),
                   SKTexture(imageNamed: image + "0.png")]
       
@@ -194,39 +194,48 @@ public class GameScene: SKScene {
   
   func deactiveAllButton() {
     allCheat.isUserInteractionEnabled = false
+    allCheat.setButtonDeactive()
     allCooperate.isUserInteractionEnabled = false
+    allCooperate.setButtonDeactive()
     cheatCooperate.isUserInteractionEnabled = false
+    cheatCooperate.setButtonDeactive()
     cooperateCheat.isUserInteractionEnabled = false
+    cooperateCheat.setButtonDeactive()
   }
   
   func activateAllButton() {
     allCheat.isUserInteractionEnabled = true
+    allCheat.setButtonNormal()
     allCooperate.isUserInteractionEnabled = true
+    allCooperate.setButtonNormal()
     cheatCooperate.isUserInteractionEnabled = true
+    cheatCooperate.setButtonNormal()
     cooperateCheat.isUserInteractionEnabled = true
+    cooperateCheat.setButtonNormal()
   }
   
   func gamePlay(sender: Button, type: ButtonType) {
+    deactiveAllButton()
     switch type {
     case .allCooperate:
       print("Cooperating")
-      playerAnimateCooperate(player1Action: .cooperate, player2Action: .cooperate)
+      playerAnimate(player1Action: .cooperate, player2Action: .cooperate)
     case .allCheat:
       print("All cheat")
-      playerAnimateCooperate(player1Action: .cheat, player2Action: .cheat)
+      playerAnimate(player1Action: .cheat, player2Action: .cheat)
     case .cooperateCheat:
       print("cooperateCheat")
-      playerAnimateCooperate(player1Action: .cooperate, player2Action: .cheat)
+      playerAnimate(player1Action: .cooperate, player2Action: .cheat)
     case .cheatCooperate:
       print("cheatCooperate")
-      playerAnimateCooperate(player1Action: .cheat, player2Action: .cooperate)
+      playerAnimate(player1Action: .cheat, player2Action: .cooperate)
     default:
       print("Wrong Button")
     }
-    sender.setButtonNormal()
+    
   }
   
-  func playerAnimateCooperate(player1Action: PlayerAction, player2Action: PlayerAction) {
+  func playerAnimate(player1Action: PlayerAction, player2Action: PlayerAction) {
     
     if player1Action == .cooperate {
       if player2Action == .cooperate {
@@ -262,6 +271,7 @@ public class GameScene: SKScene {
         self.changePlayerTexture(currentPlayer: self.player, texture: "player10.png")
         let changeAction = SKAction.run {
           self.setPlayerMode(currentPlayer : self.player, playerMood : .happy, image: "player")
+          self.player.position = CGPoint(x: 97.058,y: 391.391)
           self.coin.position = CGPoint(x: 130.471,y: 319.144)
         }
         self.player.run(SKAction.sequence([actionPlayer1,wait,changeAction]))
@@ -272,7 +282,9 @@ public class GameScene: SKScene {
         self.changePlayerTexture(currentPlayer: self.player1, texture: "player10.png")
         let changeAction = SKAction.run {
           self.setPlayerMode(currentPlayer : self.player1, playerMood : .happy, image: "player")
+          self.player1.position = CGPoint(x: 924.971,y: 391.391)
           self.coin1.position = CGPoint(x: 883.623,y: 319.208)
+          self.activateAllButton()
         }
         self.player1.run(SKAction.sequence([actionPlayer,wait,changeAction]))
       })
@@ -292,9 +304,10 @@ public class GameScene: SKScene {
       self.player.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer]))
       self.coin.run(actionCoin, completion: {
         self.changePlayerTexture(currentPlayer: self.player, texture: "player11.png")
+        self.player.run(SKAction.playSoundFileNamed("fart.mp3", waitForCompletion: false))
         let changeAction = SKAction.run {
           self.setPlayerMode(currentPlayer : self.player, playerMood : .angry, image: "player")
-          
+          self.player.position = CGPoint(x: 97.058,y: 391.391)
         }
         self.player.run(SKAction.sequence([actionPlayer1,wait,changeAction]))
         self.coin.run(SKAction.sequence([actionPlayer1,
@@ -304,7 +317,7 @@ public class GameScene: SKScene {
                                           ])
           ]), completion: {
             self.coin.position = CGPoint(x: 130.471,y: 319.144)
-            
+            self.activateAllButton()
         })
       })
       
@@ -313,7 +326,7 @@ public class GameScene: SKScene {
         self.changePlayerTexture(currentPlayer: self.player1, texture: "player11.png")
         let changeAction = SKAction.run {
           self.setPlayerMode(currentPlayer : self.player1, playerMood : .angry, image: "player")
-          
+          self.player1.position = CGPoint(x: 924.971,y: 391.391)
         }
         self.player1.run(SKAction.sequence([actionPlayer,wait,changeAction]))
         self.coin1.run(SKAction.sequence([actionPlayer,
@@ -333,26 +346,26 @@ public class GameScene: SKScene {
   
   func playerCooperateCheatAnimation() {
     let actionPlayer =  SKAction(named : "playerMoveJump")!
-    let actionCoinCheat = SKAction(named : "coinCheat")!
     let actionPlayer1 = SKAction(named : "playerMoveJump1")!
     let actionCoin1Cheat = SKAction(named : "coinCheat1")!
     let actionCoinCooperate = SKAction(named : "coinCooperate")!
-    let actionCoin1Cooperate = SKAction(named : "coinCooperate1")!
     let wait = SKAction.wait(forDuration:0.1)
     
     let action = SKAction.run {
       self.player.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer]))
       self.coin.run(actionCoinCooperate, completion: {
         self.changePlayerTexture(currentPlayer: self.player, texture: "player12.png")
+        self.player.run(SKAction.playSoundFileNamed("evil_laugh.mp3", waitForCompletion: false))
         let changeAction = SKAction.run {
           self.setPlayerMode(currentPlayer : self.player, playerMood : .sad, image: "player")
+          self.player.position = CGPoint(x: 97.058,y: 391.391)
           self.coin.position = CGPoint(x: 130.471,y: 319.144)
         }
         self.player.run(SKAction.sequence([actionPlayer1,wait,changeAction]))
         self.changePlayerTexture(currentPlayer: self.player1, texture: "player13.png")
         let changeAction1 = SKAction.run {
           self.setPlayerMode(currentPlayer : self.player1, playerMood : .swag, image: "player")
-          
+          self.player1.position = CGPoint(x: 924.971,y: 391.391)
         }
         self.player1.run(SKAction.sequence([actionPlayer,wait,changeAction1]))
         self.coin1.run(SKAction.sequence([actionPlayer,
@@ -362,7 +375,7 @@ public class GameScene: SKScene {
                                             ])
           ]), completion: {
             self.coin1.position = CGPoint(x: 883.623,y: 319.208)
-            
+            self.activateAllButton()
         })
       })
       
@@ -377,8 +390,6 @@ public class GameScene: SKScene {
     let actionPlayer =  SKAction(named : "playerMoveJump")!
     let actionCoinCheat = SKAction(named : "coinCheat")!
     let actionPlayer1 = SKAction(named : "playerMoveJump1")!
-    let actionCoin1Cheat = SKAction(named : "coinCheat1")!
-    let actionCoinCooperate = SKAction(named : "coinCooperate")!
     let actionCoin1Cooperate = SKAction(named : "coinCooperate1")!
     let wait = SKAction.wait(forDuration:0.1)
     
@@ -388,10 +399,11 @@ public class GameScene: SKScene {
       
       self.player1.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer1]))
       self.coin1.run(actionCoin1Cooperate, completion: {
-        
+        self.run(SKAction.playSoundFileNamed("evil_laugh.mp3", waitForCompletion: false))
         self.changePlayerTexture(currentPlayer: self.player, texture: "player13.png")
         let changeAction = SKAction.run {
           self.setPlayerMode(currentPlayer : self.player, playerMood : .swag, image: "player")
+          self.player.position = CGPoint(x: 97.058,y: 391.391)
           
         }
         self.player.run(SKAction.sequence([actionPlayer1,wait,changeAction]))
@@ -402,12 +414,13 @@ public class GameScene: SKScene {
                                           ])
           ]), completion: {
             self.coin.position = CGPoint(x: 130.471,y: 319.144)
-            
+            self.activateAllButton()
         })
         
         self.changePlayerTexture(currentPlayer: self.player1, texture: "player12.png")
         let changeAction1 = SKAction.run {
           self.setPlayerMode(currentPlayer : self.player1, playerMood : .sad, image: "player")
+          self.player1.position = CGPoint(x: 924.971,y: 391.391)
           self.coin1.position = CGPoint(x: 883.623,y: 319.208)
         }
         self.player1.run(SKAction.sequence([actionPlayer,wait,changeAction1]))
