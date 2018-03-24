@@ -60,11 +60,23 @@ public class GameScene: SKScene {
     player1Mood = .sad
     setPlayerMode(currentPlayer : player, playerMood : .normal, image: "player")
     setPlayerMode(currentPlayer : player1, playerMood : .sad, image: "player")
-    //    changeColorLabel(colorLabel: youCooperateLabel, changeColor: UIColor(red: 255.0/255.0,green: 230.0/255.0, blue: 99.0/255.0,alpha: 1))
-    //  machineAnim.texture = SKTexture(imageNamed: "payoff7.png")
     
     addButtons()
     startMachine()
+    
+    self.changeColorLabel(colorLabel1: self.youCooperateLabel, colorLabel2: self.theyCooperateLabel , changeColor: self.getYellow())
+    changeColorLabel2(colorLabel1: self.youCooperateLabel, changeColor: UIColor.red)
+  }
+  
+  func changeColorLabel2(colorLabel1: SKLabelNode, changeColor : UIColor) {
+    
+    let paragraphStyle = NSMutableParagraphStyle()
+    paragraphStyle.alignment = .center
+    
+    let newString = NSMutableAttributedString(string: colorLabel1.attributedText!.string, attributes: [NSAttributedStringKey.paragraphStyle: paragraphStyle])
+    newString.addAttribute(NSAttributedStringKey.foregroundColor, value: changeColor , range: NSMakeRange(0,colorLabel1.attributedText!.length))
+    newString.addAttribute( NSAttributedStringKey.font, value: UIFont(name: "HelveticaNeue-Medium", size: 18.0)!, range: NSMakeRange(0,colorLabel1.attributedText!.length))
+    colorLabel1.attributedText = newString
     
   }
   
@@ -186,21 +198,27 @@ public class GameScene: SKScene {
     
   }
   
-  func changeColorLabel(colorLabel: SKLabelNode, changeColor : UIColor) {
-    print(colorLabel)
+  func changeColorLabel(colorLabel1: SKLabelNode, colorLabel2: SKLabelNode, changeColor : UIColor) {
+    
     let paragraphStyle = NSMutableParagraphStyle()
     paragraphStyle.alignment = .center
     
-    let newString = NSMutableAttributedString(string: colorLabel.attributedText!.string, attributes: [NSAttributedStringKey.paragraphStyle: paragraphStyle])
-    newString.addAttribute(NSAttributedStringKey.foregroundColor, value: changeColor , range: NSMakeRange(0,colorLabel.attributedText!.length))
+    let newString = NSMutableAttributedString(string: colorLabel1.attributedText!.string, attributes: [NSAttributedStringKey.paragraphStyle: paragraphStyle])
+    newString.addAttribute(NSAttributedStringKey.foregroundColor, value: changeColor , range: NSMakeRange(0,colorLabel1.attributedText!.length))
+    newString.addAttribute( NSAttributedStringKey.font, value: UIFont(name: "HelveticaNeue-Medium", size: 18.0)!, range: NSMakeRange(0,colorLabel1.attributedText!.length))
+    colorLabel1.attributedText = newString
     
-    newString.addAttribute( NSAttributedStringKey.font, value: UIFont(name: "HelveticaNeue-Medium", size: 18.0)!, range: NSMakeRange(0,colorLabel.attributedText!.length))
-    
-    colorLabel.attributedText = newString
+    let newString1 = NSMutableAttributedString(string: colorLabel2.attributedText!.string, attributes: [NSAttributedStringKey.paragraphStyle: paragraphStyle])
+    newString1.addAttribute(NSAttributedStringKey.foregroundColor, value: changeColor , range: NSMakeRange(0,colorLabel2.attributedText!.length))
+    newString1.addAttribute( NSAttributedStringKey.font, value: UIFont(name: "HelveticaNeue-Medium", size: 18.0)!, range: NSMakeRange(0,colorLabel2.attributedText!.length))
+    colorLabel2.attributedText = newString1
   }
   
   func startMachine() {
-    machineAnim.run(SKAction.repeat(SKAction(named: "machineAnimation")! , count: 1))
+    deactiveAllButton()
+    machineAnim.run(SKAction.repeat(SKAction(named: "machineAnimation")! , count: 1), completion: {
+      self.activateAllButton()
+    })
   }
   
   
@@ -231,16 +249,12 @@ public class GameScene: SKScene {
     deactiveAllButton()
     switch type {
     case .allCooperate:
-      print("Cooperating")
       playerAnimate(player1Action: .cooperate, player2Action: .cooperate)
     case .allCheat:
-      print("All cheat")
       playerAnimate(player1Action: .cheat, player2Action: .cheat)
     case .cooperateCheat:
-      print("cooperateCheat")
       playerAnimate(player1Action: .cooperate, player2Action: .cheat)
     case .cheatCooperate:
-      print("cheatCooperate")
       playerAnimate(player1Action: .cheat, player2Action: .cooperate)
     default:
       print("Wrong Button")
@@ -271,6 +285,10 @@ public class GameScene: SKScene {
     currentPlayer.texture = SKTexture(imageNamed: texture)
   }
   
+  func getYellow() -> UIColor {
+   return UIColor(red: 255.0/255.0,green: 230.0/255.0, blue: 99.0/255.0,alpha: 1)
+  }
+  
   func playerAllCooperateAnimation() {
     let actionPlayer =  SKAction(named : "playerMoveJump")!
     let actionCoin = SKAction(named : "coinCooperate")!
@@ -278,12 +296,14 @@ public class GameScene: SKScene {
     let actionCoin1 = SKAction(named : "coinCooperate1")!
     let wait = SKAction.wait(forDuration:0.1)
     let give = SKAction(named : "coinGive", duration: 0.8)!
-   let giveAi = SKAction(named : "coinGive1", duration: 0.8)!
+    let giveAi = SKAction(named : "coinGive1", duration: 0.8)!
     
     let action = SKAction.run {
       self.player.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer]))
       self.coin.run(actionCoin, completion: {
         self.changePlayerTexture(currentPlayer: self.player, texture: "player10.png")
+        self.machineAnim.texture = SKTexture(imageNamed: "payoff5.png")
+        self.changeColorLabel(colorLabel1: self.youCooperateLabel,colorLabel2: self.theyCooperateLabel , changeColor: self.getYellow())
         let changeAction = SKAction.run {
           
           self.coinGiveAway.run(give)
@@ -294,6 +314,8 @@ public class GameScene: SKScene {
                                                       self.setPlayerMode(currentPlayer : self.player, playerMood : .happy, image: "player")
                                                       self.player.position = CGPoint(x: 97.058,y: 391.391)
                                                       self.coin.position = CGPoint(x: 130.471,y: 319.144)
+                                                      self.machineAnim.texture = SKTexture(imageNamed: "payoff4.png")
+                                                      self.changeColorLabel(colorLabel1: self.youCooperateLabel,colorLabel2: self.theyCooperateLabel , changeColor: UIColor.black)
                                                       self.activateAllButton()
           })
           
@@ -305,7 +327,7 @@ public class GameScene: SKScene {
       self.coin1.run(actionCoin1, completion: {
         self.changePlayerTexture(currentPlayer: self.player1, texture: "player10.png")
         let changeAction = SKAction.run {
-         
+          
           self.coinGiveAwayAi.run(giveAi)
           self.coinGiveAwayAi1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),
                                                       giveAi]), completion: {
@@ -335,6 +357,8 @@ public class GameScene: SKScene {
       self.player.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer]))
       self.coin.run(actionCoin, completion: {
         self.changePlayerTexture(currentPlayer: self.player, texture: "player11.png")
+        self.machineAnim.texture = SKTexture(imageNamed: "payoff8.png")
+//        self.changeColorLabel(colorLabel1: self.youCheatLabel, colorLabel2: self.theyCheatLabel , changeColor: self.getYellow())
         self.player.run(SKAction.playSoundFileNamed("fart.mp3", waitForCompletion: false))
         let changeAction = SKAction.run {
           self.setPlayerMode(currentPlayer : self.player, playerMood : .angry, image: "player")
@@ -348,6 +372,8 @@ public class GameScene: SKScene {
                                           ])
           ]), completion: {
             self.coin.position = CGPoint(x: 130.471,y: 319.144)
+            self.machineAnim.texture = SKTexture(imageNamed: "payoff4.png")
+//            self.changeColorLabel(colorLabel1: self.youCheatLabel,colorLabel2: self.theyCheatLabel , changeColor: UIColor.black)
             self.activateAllButton()
         })
       })
@@ -361,10 +387,10 @@ public class GameScene: SKScene {
         }
         self.player1.run(SKAction.sequence([actionPlayer,wait,changeAction]))
         self.coin1.run(SKAction.sequence([actionPlayer,
-                                         SKAction.group([SKAction.moveBy(x: 40.0,y: -90.0,duration: 0.25),
-                                                         SKAction.sequence([SKAction.wait(forDuration:0.18),
-                                                                            SKAction.fadeOut(withDuration:0.1)])
-                                          ])
+                                          SKAction.group([SKAction.moveBy(x: 40.0,y: -90.0,duration: 0.25),
+                                                          SKAction.sequence([SKAction.wait(forDuration:0.18),
+                                                                             SKAction.fadeOut(withDuration:0.1)])
+                                            ])
           ]), completion: {
             self.coin1.position = CGPoint(x: 883.623,y: 319.208)
             
@@ -381,11 +407,14 @@ public class GameScene: SKScene {
     let actionCoin1Cheat = SKAction(named : "coinCheat1")!
     let actionCoinCooperate = SKAction(named : "coinCooperate")!
     let wait = SKAction.wait(forDuration:0.1)
+    let giveAi = SKAction(named : "coinGive1", duration: 0.8)!
     
     let action = SKAction.run {
       self.player.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer]))
       self.coin.run(actionCoinCooperate, completion: {
         self.changePlayerTexture(currentPlayer: self.player, texture: "player12.png")
+        self.machineAnim.texture = SKTexture(imageNamed: "payoff7.png")
+//        self.changeColorLabel(colorLabel1: self.youCooperateLabel,colorLabel2: self.theyCheatLabel , changeColor: self.getYellow())
         self.player.run(SKAction.playSoundFileNamed("evil_laugh.mp3", waitForCompletion: false))
         let changeAction = SKAction.run {
           self.setPlayerMode(currentPlayer : self.player, playerMood : .sad, image: "player")
@@ -405,8 +434,21 @@ public class GameScene: SKScene {
                                                                              SKAction.fadeOut(withDuration:0.1)])
                                             ])
           ]), completion: {
-            self.coin1.position = CGPoint(x: 883.623,y: 319.208)
-            self.activateAllButton()
+            
+            
+            self.coinGiveAwayAi.run(giveAi)
+            self.coinGiveAwayAi1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),giveAi]))
+            self.coinGiveAwayAi2.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
+                                                        giveAi]), completion: {
+                                                          self.coinGiveAwayAi.position = CGPoint(x: 700.995,y: 340.443)
+                                                          self.coinGiveAwayAi1.position = CGPoint(x: 700.995,y: 340.443)
+                                                          self.coinGiveAwayAi2.position = CGPoint(x: 700.995,y: 340.443)
+                                                          self.coin1.position = CGPoint(x: 883.623,y: 319.208)
+                                                          self.machineAnim.texture = SKTexture(imageNamed: "payoff4.png")
+//                                                          self.changeColorLabel(colorLabel1: self.youCooperateLabel,colorLabel2: self.theyCheatLabel , changeColor: UIColor.black)
+                                                          self.activateAllButton()
+            })
+            
         })
       })
       
@@ -423,6 +465,7 @@ public class GameScene: SKScene {
     let actionPlayer1 = SKAction(named : "playerMoveJump1")!
     let actionCoin1Cooperate = SKAction(named : "coinCooperate1")!
     let wait = SKAction.wait(forDuration:0.1)
+    let give = SKAction(named : "coinGive", duration: 0.8)!
     
     let action = SKAction.run {
       self.player.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer]))
@@ -432,6 +475,8 @@ public class GameScene: SKScene {
       self.coin1.run(actionCoin1Cooperate, completion: {
         self.run(SKAction.playSoundFileNamed("evil_laugh.mp3", waitForCompletion: false))
         self.changePlayerTexture(currentPlayer: self.player, texture: "player13.png")
+        self.machineAnim.texture = SKTexture(imageNamed: "payoff6.png")
+//        self.changeColorLabel(colorLabel1: self.youCheatLabel,colorLabel2: self.theyCooperateLabel , changeColor: self.getYellow())
         let changeAction = SKAction.run {
           self.setPlayerMode(currentPlayer : self.player, playerMood : .swag, image: "player")
           self.player.position = CGPoint(x: 97.058,y: 391.391)
@@ -444,8 +489,19 @@ public class GameScene: SKScene {
                                                                             SKAction.fadeOut(withDuration:0.1)])
                                           ])
           ]), completion: {
-            self.coin.position = CGPoint(x: 130.471,y: 319.144)
-            self.activateAllButton()
+            
+            self.coinGiveAway.run(give)
+            self.coinGiveAway1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),give]))
+            self.coinGiveAway2.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
+                                                      give]), completion: {
+                                                        self.coinGiveAway.position = CGPoint(x: 323.65,y: 340.443)
+                                                        self.coinGiveAway1.position = CGPoint(x: 323.65,y: 340.443)
+                                                        self.coinGiveAway2.position = CGPoint(x: 323.65,y: 340.443)
+                                                        self.coin.position = CGPoint(x: 130.471,y: 319.144)
+                                                        self.machineAnim.texture = SKTexture(imageNamed: "payoff4.png")
+//                                                        self.changeColorLabel(colorLabel1: self.youCheatLabel,colorLabel2: self.theyCooperateLabel , changeColor: UIColor.black)
+                                                        self.activateAllButton()
+            })
         })
         
         self.changePlayerTexture(currentPlayer: self.player1, texture: "player12.png")
@@ -466,7 +522,6 @@ public class GameScene: SKScene {
 
 extension GameScene: ButtonDelegate {
   func didTap(sender: Button, type: ButtonType) {
-    print("Tapped", type)
     sender.setButtonDeactive()
     gamePlay(sender: sender, type: type)
   }
