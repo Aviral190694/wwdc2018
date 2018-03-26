@@ -1,9 +1,11 @@
 import Foundation
+
+import Foundation
 import SpriteKit
 import UIKit
 import GameKit
 
-public class GameScene: SKScene {
+public class MainGameScene: SKScene {
   
   private var label: SKLabelNode!
   private var spinnyNode: SKShapeNode!
@@ -13,10 +15,8 @@ public class GameScene: SKScene {
   private var coin: SKSpriteNode!
   private var coin1: SKSpriteNode!
   
-  private var allCooperate: Button!
-  private var cooperateCheat: Button!
-  private var cheatCooperate: Button!
-  private var allCheat: Button!
+  private var cooperateButton: Button!
+  private var cheatButton: Button!
   
   private var youCheatLabel: SKLabelNode!
   private var youCooperateLabel: SKLabelNode!
@@ -64,7 +64,7 @@ public class GameScene: SKScene {
     addButtons()
     startMachine()
     
-   
+    
   }
   
   
@@ -157,33 +157,33 @@ public class GameScene: SKScene {
   
   func addButtons() {
     
-    allCooperate = Button()
-    allCooperate.position = CGPoint(x: 349.01 , y: 208.675)
-    allCooperate.delegate = self
-    addChild(allCooperate)
-    allCooperate.addTextNode(text: "All Cooperate")
-    allCooperate.setButtonType(buttonType: .allCooperate)
+//    allCooperate = Button()
+//    allCooperate.position = CGPoint(x: 349.01 , y: 208.675)
+//    allCooperate.delegate = self
+//    addChild(allCooperate)
+//    allCooperate.addTextNode(text: "All Cooperate")
+//    allCooperate.setButtonType(buttonType: .allCooperate)
+//
+//    cooperateCheat = Button()
+//    cooperateCheat.position = CGPoint(x: 661.484 , y: 208.675)
+//    cooperateCheat.delegate = self
+//    addChild(cooperateCheat)
+//    cooperateCheat.addTextNode(text: "Cooperate - Cheat")
+//    cooperateCheat.setButtonType(buttonType: .cooperateCheat)
     
-    cooperateCheat = Button()
-    cooperateCheat.position = CGPoint(x: 661.484 , y: 208.675)
-    cooperateCheat.delegate = self
-    addChild(cooperateCheat)
-    cooperateCheat.addTextNode(text: "Cooperate - Cheat")
-    cooperateCheat.setButtonType(buttonType: .cooperateCheat)
+    cooperateButton = Button()
+    cooperateButton.position = CGPoint(x: 349.01 , y: 97.728)
+    cooperateButton.delegate = self
+    addChild(cooperateButton)
+    cooperateButton.addTextNode(text: "Cooperate")
+    cooperateButton.setButtonType(buttonType: .cooperate)
     
-    cheatCooperate = Button()
-    cheatCooperate.position = CGPoint(x: 349.01 , y: 97.728)
-    cheatCooperate.delegate = self
-    addChild(cheatCooperate)
-    cheatCooperate.addTextNode(text: "Cheat - Cooperate")
-    cheatCooperate.setButtonType(buttonType: .cheatCooperate)
-    
-    allCheat = Button()
-    allCheat.position = CGPoint(x: 661.484 , y: 97.728)
-    allCheat.delegate = self
-    addChild(allCheat)
-    allCheat.addTextNode(text: "All Cheat")
-    allCheat.setButtonType(buttonType: .allCheat)
+    cheatButton = Button()
+    cheatButton.position = CGPoint(x: 661.484 , y: 97.728)
+    cheatButton.delegate = self
+    addChild(cheatButton)
+    cheatButton.addTextNode(text: "Cheat")
+    cheatButton.setButtonType(buttonType: .cheat)
     
   }
   
@@ -213,25 +213,17 @@ public class GameScene: SKScene {
   
   
   func deactiveAllButton() {
-    allCheat.isUserInteractionEnabled = false
-    allCheat.setButtonDeactive()
-    allCooperate.isUserInteractionEnabled = false
-    allCooperate.setButtonDeactive()
-    cheatCooperate.isUserInteractionEnabled = false
-    cheatCooperate.setButtonDeactive()
-    cooperateCheat.isUserInteractionEnabled = false
-    cooperateCheat.setButtonDeactive()
+    cheatButton.isUserInteractionEnabled = false
+    cheatButton.setButtonDeactive()
+    cooperateButton.isUserInteractionEnabled = false
+    cooperateButton.setButtonDeactive()
   }
   
   func activateAllButton() {
-    allCheat.isUserInteractionEnabled = true
-    allCheat.setButtonNormal()
-    allCooperate.isUserInteractionEnabled = true
-    allCooperate.setButtonNormal()
-    cheatCooperate.isUserInteractionEnabled = true
-    cheatCooperate.setButtonNormal()
-    cooperateCheat.isUserInteractionEnabled = true
-    cooperateCheat.setButtonNormal()
+    cheatButton.isUserInteractionEnabled = true
+    cheatButton.setButtonNormal()
+    cooperateButton.isUserInteractionEnabled = true
+    cooperateButton.setButtonNormal()
   }
   
   func gamePlay(sender: Button, type: ButtonType) {
@@ -275,7 +267,7 @@ public class GameScene: SKScene {
   }
   
   func getYellow() -> UIColor {
-   return UIColor(red: 255.0/255.0,green: 230.0/255.0, blue: 99.0/255.0,alpha: 1)
+    return UIColor(red: 255.0/255.0,green: 230.0/255.0, blue: 99.0/255.0,alpha: 1)
   }
   
   func playerAllCooperateAnimation() {
@@ -508,7 +500,7 @@ public class GameScene: SKScene {
   
 }
 
-extension GameScene: ButtonDelegate {
+extension MainGameScene: ButtonDelegate {
   func didTap(sender: Button, type: ButtonType) {
     sender.setButtonDeactive()
     gamePlay(sender: sender, type: type)
