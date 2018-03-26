@@ -59,7 +59,7 @@ public class MainGameScene: SKScene {
     playerMood = .normal
     player1Mood = .normal
     setPlayerMode(currentPlayer : player, playerMood : .normal, image: "player")
-    setPlayerMode(currentPlayer : player1, playerMood : .normal, image: "player")
+    setPlayerMode(currentPlayer : player1, playerMood : .normal, image: "detective")
     
     addButtons()
     startMachine()
