@@ -59,7 +59,7 @@ public class MainGameScene: SKScene {
     playerMood = .normal
     player1Mood = .normal
     setPlayerMode(currentPlayer : player, playerMood : .normal, image: "player")
-    setPlayerMode(currentPlayer : player1, playerMood : .normal, image: "detective")
+    setPlayerMode(currentPlayer : player1, playerMood : .normal, image: "copycat")
     
     addButtons()
     startMachine()
@@ -73,6 +73,9 @@ public class MainGameScene: SKScene {
     var texture1 = [SKTexture]()
     var texture2 = [SKTexture]()
     currentPlayer.removeAllActions()
+    
+    setAiPosition(currentPlayer: currentPlayer, image: image)
+    
     switch playerMood {
     case .normal:
       currentPlayer.texture = SKTexture(imageNamed: image + "0.png")
@@ -157,20 +160,6 @@ public class MainGameScene: SKScene {
   
   func addButtons() {
     
-//    allCooperate = Button()
-//    allCooperate.position = CGPoint(x: 349.01 , y: 208.675)
-//    allCooperate.delegate = self
-//    addChild(allCooperate)
-//    allCooperate.addTextNode(text: "All Cooperate")
-//    allCooperate.setButtonType(buttonType: .allCooperate)
-//
-//    cooperateCheat = Button()
-//    cooperateCheat.position = CGPoint(x: 661.484 , y: 208.675)
-//    cooperateCheat.delegate = self
-//    addChild(cooperateCheat)
-//    cooperateCheat.addTextNode(text: "Cooperate - Cheat")
-//    cooperateCheat.setButtonType(buttonType: .cooperateCheat)
-    
     cooperateButton = Button()
     cooperateButton.position = CGPoint(x: 349.01 , y: 97.728)
     cooperateButton.delegate = self
@@ -229,33 +218,38 @@ public class MainGameScene: SKScene {
   func gamePlay(sender: Button, type: ButtonType) {
     deactiveAllButton()
     switch type {
-    case .allCooperate:
-      playerAnimate(player1Action: .cooperate, player2Action: .cooperate)
-    case .allCheat:
-      playerAnimate(player1Action: .cheat, player2Action: .cheat)
-    case .cooperateCheat:
-      playerAnimate(player1Action: .cooperate, player2Action: .cheat)
-    case .cheatCooperate:
-      playerAnimate(player1Action: .cheat, player2Action: .cooperate)
+    case .cooperate:
+      print("Cooperate Clicked")
+      playerAnimate(player1Action: .cheat, player2Action: .cooperate, imageName: "copycat")
+    case .cheat:
+      print("Cheat Clicked")
+//    case .allCooperate:
+//      playerAnimate(player1Action: .cooperate, player2Action: .cooperate)
+//    case .allCheat:
+//      playerAnimate(player1Action: .cheat, player2Action: .cheat)
+//    case .cooperateCheat:
+//      playerAnimate(player1Action: .cooperate, player2Action: .cheat)
+//    case .cheatCooperate:
+//      playerAnimate(player1Action: .cheat, player2Action: .cooperate)
     default:
       print("Wrong Button")
     }
     
   }
   
-  func playerAnimate(player1Action: PlayerAction, player2Action: PlayerAction) {
+  func playerAnimate(player1Action: PlayerAction, player2Action: PlayerAction, imageName: String) {
     
     if player1Action == .cooperate {
       if player2Action == .cooperate {
-        playerAllCooperateAnimation()
+        playerAllCooperateAnimation(imageName: imageName)
       } else {
-        playerCooperateCheatAnimation()
+        playerCooperateCheatAnimation(imageName: imageName)
       }
     } else {
       if player2Action == .cooperate {
-        playerCheatCooperateAnimation()
+        playerCheatCooperateAnimation(imageName: imageName)
       } else {
-        playerAllCheatAnimation()
+        playerAllCheatAnimation(imageName: imageName)
       }
     }
     
@@ -270,7 +264,7 @@ public class MainGameScene: SKScene {
     return UIColor(red: 255.0/255.0,green: 230.0/255.0, blue: 99.0/255.0,alpha: 1)
   }
   
-  func playerAllCooperateAnimation() {
+  func playerAllCooperateAnimation(imageName: String) {
     let actionPlayer =  SKAction(named : "playerMoveJump")!
     let actionCoin = SKAction(named : "coinCooperate")!
     let actionPlayer1 = SKAction(named : "playerMoveJump1")!
@@ -290,11 +284,10 @@ public class MainGameScene: SKScene {
           self.coinGiveAway.run(give)
           self.coinGiveAway1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),
                                                     give]), completion: {
-                                                      self.coinGiveAway.position = CGPoint(x: 323.65,y: 340.443)
-                                                      self.coinGiveAway1.position = CGPoint(x: 323.65,y: 340.443)
+                                                      self.resetCoinGiveAwayPlayerPosition()
                                                       self.setPlayerMode(currentPlayer : self.player, playerMood : .happy, image: "player")
-                                                      self.player.position = CGPoint(x: 97.058,y: 391.391)
-                                                      self.coin.position = CGPoint(x: 130.471,y: 319.144)
+                                                      self.setPlayerPosition()
+                                                      self.setCoinPosition()
                                                       self.machineAnim.texture = SKTexture(imageNamed: "payoff4.png")
                                                       self.changeColorLabel(colorLabel1: self.youCooperateLabel,colorLabel2: self.theyCooperateLabel , changeColor: UIColor.black)
                                                       self.activateAllButton()
@@ -306,17 +299,17 @@ public class MainGameScene: SKScene {
       
       self.player1.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer1]))
       self.coin1.run(actionCoin1, completion: {
-        self.changePlayerTexture(currentPlayer: self.player1, texture: "player10.png")
+        self.changePlayerTexture(currentPlayer: self.player1, texture: imageName + "10.png")
         let changeAction = SKAction.run {
           
           self.coinGiveAwayAi.run(giveAi)
           self.coinGiveAwayAi1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),
                                                       giveAi]), completion: {
-                                                        self.setPlayerMode(currentPlayer : self.player1, playerMood : .happy, image: "player")
-                                                        self.player1.position = CGPoint(x: 924.971,y: 391.391)
-                                                        self.coin1.position = CGPoint(x: 883.623,y: 319.208)
-                                                        self.coinGiveAwayAi.position = CGPoint(x: 700.995,y: 340.443)
-                                                        self.coinGiveAwayAi1.position = CGPoint(x: 700.995,y: 340.443)
+                                                        self.setPlayerMode(currentPlayer : self.player1, playerMood : .happy, image: imageName)
+                                                        self.setAiPosition(currentPlayer: self.player1, image: imageName)
+//                                                        self.player1.position = CGPoint(x: 924.971,y: 391.391)
+                                                        self.setCoinAiPosition()
+                                                        self.resetCoinGiveAwayPosition()
           })
           
         }
@@ -327,7 +320,7 @@ public class MainGameScene: SKScene {
     run(SKAction.sequence([wait, action]))
   }
   
-  func playerAllCheatAnimation() {
+  func playerAllCheatAnimation(imageName: String) {
     let actionPlayer =  SKAction(named : "playerMoveJump")!
     let actionCoin = SKAction(named : "coinCheat")!
     let actionPlayer1 = SKAction(named : "playerMoveJump1")!
@@ -343,7 +336,7 @@ public class MainGameScene: SKScene {
         self.player.run(SKAction.playSoundFileNamed("fart.mp3", waitForCompletion: false))
         let changeAction = SKAction.run {
           self.setPlayerMode(currentPlayer : self.player, playerMood : .angry, image: "player")
-          self.player.position = CGPoint(x: 97.058,y: 391.391)
+          self.setPlayerPosition()
         }
         self.player.run(SKAction.sequence([actionPlayer1,wait,changeAction]))
         self.coin.run(SKAction.sequence([actionPlayer1,
@@ -352,7 +345,7 @@ public class MainGameScene: SKScene {
                                                                             SKAction.fadeOut(withDuration:0.1)])
                                           ])
           ]), completion: {
-            self.coin.position = CGPoint(x: 130.471,y: 319.144)
+            self.setCoinPosition()
             self.machineAnim.texture = SKTexture(imageNamed: "payoff4.png")
             self.changeColorLabel(colorLabel1: self.youCheatLabel,colorLabel2: self.theyCheatLabel , changeColor: UIColor.black)
             self.activateAllButton()
@@ -361,10 +354,10 @@ public class MainGameScene: SKScene {
       
       self.player1.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer1]))
       self.coin1.run(actionCoin1, completion: {
-        self.changePlayerTexture(currentPlayer: self.player1, texture: "player11.png")
+        self.changePlayerTexture(currentPlayer: self.player1, texture: imageName + "11.png")
         let changeAction = SKAction.run {
-          self.setPlayerMode(currentPlayer : self.player1, playerMood : .angry, image: "player")
-          self.player1.position = CGPoint(x: 924.971,y: 391.391)
+          self.setPlayerMode(currentPlayer : self.player1, playerMood : .angry, image: imageName)
+          self.setAiPosition(currentPlayer: self.player1, image: imageName)
         }
         self.player1.run(SKAction.sequence([actionPlayer,wait,changeAction]))
         self.coin1.run(SKAction.sequence([actionPlayer,
@@ -373,7 +366,7 @@ public class MainGameScene: SKScene {
                                                                              SKAction.fadeOut(withDuration:0.1)])
                                             ])
           ]), completion: {
-            self.coin1.position = CGPoint(x: 883.623,y: 319.208)
+            self.setCoinAiPosition()
             
         })
       })
@@ -382,7 +375,7 @@ public class MainGameScene: SKScene {
     run(SKAction.sequence([wait, action]))
   }
   
-  func playerCooperateCheatAnimation() {
+  func playerCooperateCheatAnimation(imageName: String) {
     let actionPlayer =  SKAction(named : "playerMoveJump")!
     let actionPlayer1 = SKAction(named : "playerMoveJump1")!
     let actionCoin1Cheat = SKAction(named : "coinCheat1")!
@@ -399,14 +392,14 @@ public class MainGameScene: SKScene {
         self.player.run(SKAction.playSoundFileNamed("evil_laugh.mp3", waitForCompletion: false))
         let changeAction = SKAction.run {
           self.setPlayerMode(currentPlayer : self.player, playerMood : .sad, image: "player")
-          self.player.position = CGPoint(x: 97.058,y: 391.391)
-          self.coin.position = CGPoint(x: 130.471,y: 319.144)
+          self.setPlayerPosition()
+          self.setCoinPosition()
         }
         self.player.run(SKAction.sequence([actionPlayer1,wait,changeAction]))
-        self.changePlayerTexture(currentPlayer: self.player1, texture: "player13.png")
+        self.changePlayerTexture(currentPlayer: self.player1, texture: imageName + "13.png")
         let changeAction1 = SKAction.run {
-          self.setPlayerMode(currentPlayer : self.player1, playerMood : .swag, image: "player")
-          self.player1.position = CGPoint(x: 924.971,y: 391.391)
+          self.setPlayerMode(currentPlayer : self.player1, playerMood : .swag, image: imageName)
+          self.setAiPosition(currentPlayer: self.player1, image: imageName)
         }
         self.player1.run(SKAction.sequence([actionPlayer,wait,changeAction1]))
         self.coin1.run(SKAction.sequence([actionPlayer,
@@ -421,10 +414,8 @@ public class MainGameScene: SKScene {
             self.coinGiveAwayAi1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),giveAi]))
             self.coinGiveAwayAi2.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
                                                         giveAi]), completion: {
-                                                          self.coinGiveAwayAi.position = CGPoint(x: 700.995,y: 340.443)
-                                                          self.coinGiveAwayAi1.position = CGPoint(x: 700.995,y: 340.443)
-                                                          self.coinGiveAwayAi2.position = CGPoint(x: 700.995,y: 340.443)
-                                                          self.coin1.position = CGPoint(x: 883.623,y: 319.208)
+                                                          self.resetCoinGiveAwayPosition()
+                                                          self.setCoinAiPosition()
                                                           self.machineAnim.texture = SKTexture(imageNamed: "payoff4.png")
                                                           self.changeColorLabel(colorLabel1: self.youCooperateLabel,colorLabel2: self.theyCheatLabel , changeColor: UIColor.black)
                                                           self.activateAllButton()
@@ -440,7 +431,7 @@ public class MainGameScene: SKScene {
     run(SKAction.sequence([wait, action]))
   }
   
-  func playerCheatCooperateAnimation() {
+  func playerCheatCooperateAnimation(imageName: String) {
     let actionPlayer =  SKAction(named : "playerMoveJump")!
     let actionCoinCheat = SKAction(named : "coinCheat")!
     let actionPlayer1 = SKAction(named : "playerMoveJump1")!
@@ -460,7 +451,7 @@ public class MainGameScene: SKScene {
         self.changeColorLabel(colorLabel1: self.youCheatLabel,colorLabel2: self.theyCooperateLabel , changeColor: self.getYellow())
         let changeAction = SKAction.run {
           self.setPlayerMode(currentPlayer : self.player, playerMood : .swag, image: "player")
-          self.player.position = CGPoint(x: 97.058,y: 391.391)
+          self.setPlayerPosition()
           
         }
         self.player.run(SKAction.sequence([actionPlayer1,wait,changeAction]))
@@ -474,21 +465,19 @@ public class MainGameScene: SKScene {
             self.coinGiveAway1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),give]))
             self.coinGiveAway2.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
                                                       give]), completion: {
-                                                        self.coinGiveAway.position = CGPoint(x: 323.65,y: 340.443)
-                                                        self.coinGiveAway1.position = CGPoint(x: 323.65,y: 340.443)
-                                                        self.coinGiveAway2.position = CGPoint(x: 323.65,y: 340.443)
-                                                        self.coin.position = CGPoint(x: 130.471,y: 319.144)
+                                                        self.resetCoinGiveAwayPlayerPosition()
+                                                        self.setCoinPosition()
                                                         self.machineAnim.texture = SKTexture(imageNamed: "payoff4.png")
                                                         self.changeColorLabel(colorLabel1: self.youCheatLabel,colorLabel2: self.theyCooperateLabel , changeColor: UIColor.black)
                                                         self.activateAllButton()
             })
         })
         
-        self.changePlayerTexture(currentPlayer: self.player1, texture: "player12.png")
+        self.changePlayerTexture(currentPlayer: self.player1, texture: imageName + "12.png")
         let changeAction1 = SKAction.run {
-          self.setPlayerMode(currentPlayer : self.player1, playerMood : .sad, image: "player")
-          self.player1.position = CGPoint(x: 924.971,y: 391.391)
-          self.coin1.position = CGPoint(x: 883.623,y: 319.208)
+          self.setPlayerMode(currentPlayer : self.player1, playerMood : .sad, image: imageName)
+          self.setAiPosition(currentPlayer: self.player1, image: imageName)
+          self.setCoinAiPosition()
         }
         self.player1.run(SKAction.sequence([actionPlayer,wait,changeAction1]))
       })
@@ -497,7 +486,51 @@ public class MainGameScene: SKScene {
     run(SKAction.sequence([wait, action]))
   }
   
+  func setAiPosition(currentPlayer: SKSpriteNode, image: String) {
+    if image == "detective" {
+      currentPlayer.position = CGPoint(x: 921.664 ,y: 298.834)
+      currentPlayer.size = CGSize(width: 100, height: 190)
+    } else if image == "cheat" {
+      currentPlayer.position = CGPoint(x: 921.664 ,y: 301.834)
+      currentPlayer.size = CGSize(width: 205, height: 195)
+    } else if image == "cooperate" {
+      currentPlayer.position = CGPoint(x: 921.664 ,y: 298.834)
+      currentPlayer.size = CGSize(width: 130, height: 190)
+    } else if image == "grudge" {
+      currentPlayer.position = CGPoint(x: 921.664 ,y: 298.834)
+      currentPlayer.size = CGSize(width: 100, height: 190)
+    } else if image == "copycat" {
+      currentPlayer.position = CGPoint(x: 921.664 ,y: 309.834)
+      currentPlayer.size = CGSize(width: 100, height: 215)
+    }
+  }
   
+  func setPlayerPosition() {
+    player.position = CGPoint(x: 97.503,y: 298.712)
+  }
+  
+  func resetCoinGiveAwayPosition() {
+    let position = CGPoint(x: 701.439,y: 242.764)
+    self.coinGiveAwayAi.position = position
+    self.coinGiveAwayAi1.position = position
+    self.coinGiveAwayAi2.position = position
+    
+  }
+  
+  func resetCoinGiveAwayPlayerPosition() {
+    let position = CGPoint(x: 324.095,y: 242.764)
+    self.coinGiveAway.position = position
+    self.coinGiveAway1.position = position
+    self.coinGiveAway2.position = position
+  }
+  
+  func setCoinAiPosition() {
+    coin1.position = CGPoint(x: 884.067,y: 221.529)
+  }
+  
+  func setCoinPosition() {
+    coin.position = CGPoint(x: 130.915, y: 221.529)
+  }
 }
 
 extension MainGameScene: ButtonDelegate {
