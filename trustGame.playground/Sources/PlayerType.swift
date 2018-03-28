@@ -1,6 +1,6 @@
 import Foundation
 
-public enum PlayerTypes {
+public enum PlayerType {
   case copycat,
   allDefect,
   allCooperate,
