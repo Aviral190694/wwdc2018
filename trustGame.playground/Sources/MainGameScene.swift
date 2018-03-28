@@ -22,6 +22,10 @@ public class MainGameScene: SKScene {
   private var youCooperateLabel: SKLabelNode!
   private var theyCooperateLabel: SKLabelNode!
   private var theyCheatLabel: SKLabelNode!
+  private var scoreLabelPlayer: SKLabelNode!
+  private var scoreLabelAi: SKLabelNode!
+  private var opponentCountLabel: SKLabelNode!
+  private var totalScoreLabel: SKLabelNode!
   
   private var playerMood: PlayerMood!
   private var player1Mood: PlayerMood!
@@ -36,14 +40,40 @@ public class MainGameScene: SKScene {
   private var coinGiveAwayAi1: SKSpriteNode!
   private var coinGiveAwayAi2: SKSpriteNode!
   
+  private var isExtraTextHidden = false
+  
+  private var currentPlayerScore = 0 {
+    didSet {
+      scoreLabelPlayer.text = "\(currentPlayerScore)"
+    }
+  }
+  
+  private var currentAiScore = 0 {
+    didSet {
+      scoreLabelAi.text = "\(currentAiScore)"
+    }
+  }
+  
+  private var totalScore = 0 {
+    didSet {
+      totalScoreLabel.text = "Your total score : \(totalScore)"
+    }
+  }
+  
+  
   private var playerOrder: [(type: PlayerType, round: Int, imageName: String)] = [(type: .copycat, round: 5, imageName : "copycat"),
                                            (type: .allDefect, round: 4, imageName : "cheat"),
                                            (type: .allCooperate, round: 4, imageName : "cooperate"),
                                            (type: .grudges, round: 5, imageName : "grudge"),
                                            (type: .prober, round: 7, imageName : "detective")]
   
-  var currentRound = 0
-  var currentPlayer = 0
+  var currentRound = 0 
+  
+  var currentPlayer = 0 {
+    didSet {
+      opponentCountLabel.text = "opponent: \(currentPlayer + 1) of 5"
+    }
+  }
   var lastMove : PlayerAction = .cooperate
   var everCheated = false
   var proberMoves: [PlayerAction] = [.cooperate, .cheat, .cooperate , .cooperate]
@@ -67,6 +97,11 @@ public class MainGameScene: SKScene {
     youCooperateLabel = childNode(withName: "//youCooperate") as? SKLabelNode
     theyCheatLabel = childNode(withName: "//theyCheat") as? SKLabelNode
     theyCooperateLabel = childNode(withName: "//theyCooperate") as? SKLabelNode
+    
+    scoreLabelPlayer = childNode(withName: "//scoreLabelPlayer") as? SKLabelNode
+    scoreLabelAi = childNode(withName: "//scoreLabelAi") as? SKLabelNode
+    opponentCountLabel = childNode(withName: "//oppnentLabel") as? SKLabelNode
+    totalScoreLabel = childNode(withName: "//totalScoreLabel") as? SKLabelNode
     
     playerMood = .normal
     player1Mood = .normal
@@ -101,6 +136,7 @@ public class MainGameScene: SKScene {
   }
   
   func gamePlay(sender: Button, type: ButtonType) {
+    hideArrowAndLabel()
     deactiveAllButton()
     currentRound += 1
     switch type {
@@ -167,41 +203,35 @@ public class MainGameScene: SKScene {
   }
   
   func resetAnimationAI() {
-    print("current player is", currentPlayer)
     
+    self.deactiveAllButton()
     self.everCheated = false
     self.lastMove = .cooperate
+    self.currentAiScore = 0
+    self.currentPlayerScore = 0
     if self.currentPlayer == 5 {
       print("Game ended")
     } else {
-      self.deactiveAllButton()
+      
       let action1 = SKAction.run {
         self.setPlayerMode(currentPlayer : self.player1, playerMood : .normal, image: self.playerOrder[self.currentPlayer].imageName)
         self.player1.alpha = 1
         self.activateAllButton()
-        //    self.setAiPosition(currentPlayer: self.player1, image: self.playerOrder[self.currentPlayer].imageName)
-        
       }
       let action2 = SKAction.run {
         self.setPlayerMode(currentPlayer : self.player, playerMood : .normal, image: "player")
         self.player.alpha = 1
-        //    self.setAiPosition(currentPlayer: self.player1, image: self.playerOrder[self.currentPlayer].imageName)
       }
       self.player1.run(SKAction.sequence([SKAction.fadeOut(withDuration : 0.5),SKAction.wait(forDuration: 0.5), action1]))
       self.player.run(SKAction.sequence([SKAction.fadeOut(withDuration : 0.5),SKAction.wait(forDuration: 0.5),action2]))
       
     }
-    
-    
-    
-   
-  }
+   }
   
   func setPlayerMode(currentPlayer : SKSpriteNode, playerMood : PlayerMood, image: String) {
     var texture1 = [SKTexture]()
     var texture2 = [SKTexture]()
     currentPlayer.removeAllActions()
-    print("player is ",image)
     setAiPosition(currentPlayer: currentPlayer, image: image)
     
     switch playerMood {
@@ -358,7 +388,8 @@ public class MainGameScene: SKScene {
         let changeAction = SKAction.run {
           
           self.coinGiveAway.run(give)
-          self.coinGiveAway1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),
+          self.coinGiveAway1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),give]))
+          self.coinGiveAway2.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
                                                     give]), completion: {
                                                       self.resetCoinGiveAwayPlayerPosition()
                                                       self.setPlayerMode(currentPlayer : self.player, playerMood : .happy, image: "player")
@@ -366,7 +397,11 @@ public class MainGameScene: SKScene {
                                                       self.setCoinPosition()
                                                       self.machineAnim.texture = SKTexture(imageNamed: "payoff4.png")
                                                       self.changeColorLabel(colorLabel1: self.youCooperateLabel,colorLabel2: self.theyCooperateLabel , changeColor: UIColor.black)
+                                                      self.totalScore += 2
+                                                      self.currentPlayerScore += 2
+                                                      self.currentAiScore += 2
                                                       self.activateAllButton()
+                                                      
                                                       
           })
           
@@ -380,7 +415,8 @@ public class MainGameScene: SKScene {
         let changeAction = SKAction.run {
           
           self.coinGiveAwayAi.run(giveAi)
-          self.coinGiveAwayAi1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),
+          self.coinGiveAwayAi1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),giveAi]))
+          self.coinGiveAwayAi2.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
                                                       giveAi]), completion: {
                                                         self.setAiPosition(currentPlayer: self.player1, image: imageName)
                                                         if self.currentRound == self.playerOrder[self.currentPlayer].round {
@@ -509,6 +545,9 @@ public class MainGameScene: SKScene {
                                                           self.machineAnim.texture = SKTexture(imageNamed: "payoff4.png")
                                                           self.changeColorLabel(colorLabel1: self.youCooperateLabel, colorLabel2: self.theyCheatLabel, changeColor: UIColor.black)
                                                           self.activateAllButton()
+                                                          self.totalScore += -1
+                                                          self.currentPlayerScore += -1
+                                                          self.currentAiScore += 3
                                                           if self.currentRound == self.playerOrder[self.currentPlayer].round {
                                                             self.currentRound = 0
                                                             self.currentPlayer += 1
@@ -565,6 +604,9 @@ public class MainGameScene: SKScene {
                                                         self.machineAnim.texture = SKTexture(imageNamed: "payoff4.png")
                                                         self.changeColorLabel(colorLabel1: self.youCheatLabel, colorLabel2: self.theyCooperateLabel, changeColor: UIColor.black)
                                                         self.activateAllButton()
+                                                        self.totalScore += 3
+                                                        self.currentPlayerScore += 3
+                                                        self.currentAiScore += -1
                                                         if self.currentRound == self.playerOrder[self.currentPlayer].round {
                                                           self.currentRound = 0
                                                           self.currentPlayer += 1
@@ -630,6 +672,28 @@ public class MainGameScene: SKScene {
   func setCoinPosition() {
     coin.position = CGPoint(x: 130.915, y: 221.529)
   }
+  
+  func hideArrowAndLabel() {
+    if !isExtraTextHidden {
+      isExtraTextHidden = true
+      
+      let you = childNode(withName: "//youLabel") as! SKLabelNode
+      let otherPlayer = childNode(withName: "//otherPlayer") as! SKLabelNode
+      let machineText = childNode(withName: "//machineText") as! SKLabelNode
+//
+      let arrowYou = childNode(withName: "//ArrowYou") as! SKSpriteNode
+      let machineArrow = childNode(withName: "//ArrowMachine") as! SKSpriteNode
+      let arrowOtherPlayer = childNode(withName: "//ArrowOtherPlayer") as! SKSpriteNode
+//
+      you.isHidden = true
+      otherPlayer.isHidden = true
+      machineText.isHidden = true
+      arrowYou.isHidden = true
+      machineArrow.isHidden = true
+      arrowOtherPlayer.isHidden = true
+    }
+  }
+  
 }
 
 extension MainGameScene: ButtonDelegate {

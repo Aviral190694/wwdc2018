@@ -35,6 +35,7 @@ public class GameScene: SKScene {
   private var coinGiveAwayAi: SKSpriteNode!
   private var coinGiveAwayAi1: SKSpriteNode!
   private var coinGiveAwayAi2: SKSpriteNode!
+  private var isExtraTextHidden = false
   
   public override func didMove(to view: SKView) {
     run(SKAction.repeatForever(SKAction.playSoundFileNamed("bg_music.mp3", waitForCompletion: true)))
@@ -67,8 +68,26 @@ public class GameScene: SKScene {
    
   }
   
-  
-  
+  func hideArrowAndLabel() {
+    if !isExtraTextHidden {
+      isExtraTextHidden = true
+      
+      let you = childNode(withName: "//you") as! SKLabelNode
+      let otherPlayer = childNode(withName: "//otherPlayer") as! SKLabelNode
+      let machineText = childNode(withName: "//machineText") as! SKLabelNode
+      //
+      let arrowYou = childNode(withName: "//ArrowYou") as! SKSpriteNode
+      let machineArrow = childNode(withName: "//ArrowMachine") as! SKSpriteNode
+      let arrowOtherPlayer = childNode(withName: "//ArrowOtherPlayer") as! SKSpriteNode
+      //
+      you.isHidden = true
+      otherPlayer.isHidden = true
+      machineText.isHidden = true
+      arrowYou.isHidden = true
+      machineArrow.isHidden = true
+      arrowOtherPlayer.isHidden = true
+    }
+  }
   func setPlayerMode(currentPlayer : SKSpriteNode, playerMood : PlayerMood, image: String) {
     var texture1 = [SKTexture]()
     var texture2 = [SKTexture]()
@@ -235,6 +254,7 @@ public class GameScene: SKScene {
   }
   
   func gamePlay(sender: Button, type: ButtonType) {
+    hideArrowAndLabel()
     deactiveAllButton()
     switch type {
     case .allCooperate:
@@ -296,7 +316,8 @@ public class GameScene: SKScene {
         let changeAction = SKAction.run {
           
           self.coinGiveAway.run(give)
-          self.coinGiveAway1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),
+          self.coinGiveAway1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),give]))
+          self.coinGiveAway2.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
                                                     give]), completion: {
                                                       self.coinGiveAway.position = CGPoint(x: 323.65,y: 340.443)
                                                       self.coinGiveAway1.position = CGPoint(x: 323.65,y: 340.443)
@@ -318,7 +339,8 @@ public class GameScene: SKScene {
         let changeAction = SKAction.run {
           
           self.coinGiveAwayAi.run(giveAi)
-          self.coinGiveAwayAi1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),
+          self.coinGiveAwayAi1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),giveAi]))
+          self.coinGiveAwayAi2.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
                                                       giveAi]), completion: {
                                                         self.setPlayerMode(currentPlayer : self.player1, playerMood : .happy, image: "player")
                                                         self.player1.position = CGPoint(x: 924.971,y: 391.391)
