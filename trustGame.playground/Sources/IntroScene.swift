@@ -33,15 +33,13 @@ public class IntroScene: SKScene {
         self.dummyText.isHidden = true
         self.removePeople()
         self.setPlayerMode(currentPlayer : self.player, playerMood : .normal, image: "player")
-        self.introText.alpha = 1
-        self.addButtons()
       } else {
       let paragraphStyle = NSMutableParagraphStyle()
       paragraphStyle.alignment = .center
       
       let newString = NSMutableAttributedString(string: self.textArray[self.textCount], attributes: [NSAttributedStringKey.paragraphStyle: paragraphStyle])
       newString.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.black , range: NSMakeRange(0,self.textArray[self.textCount].count))
-      newString.addAttribute( NSAttributedStringKey.font, value: UIFont(name: "HelveticaNeue-Medium", size: 24.0)!, range: NSMakeRange(0,self.textArray[self.textCount].count))
+      newString.addAttribute( NSAttributedStringKey.font, value: UIFont(name: "HelveticaNeue-Medium", size: 36)!, range: NSMakeRange(0,self.textArray[self.textCount].count))
       self.dummyText.attributedText = newString
 //      self.dummyText.text = self.textArray[self.textCount]
       self.textCount += 1
@@ -51,7 +49,7 @@ public class IntroScene: SKScene {
     let action = SKAction.run {
       self.addPeople()
      self.dummyText.run(SKAction.fadeIn(withDuration : 0.5))
-      self.run(SKAction.repeat(SKAction.sequence([SKAction.wait(forDuration: 1.2),action2]), count: 5))
+      self.run(SKAction.repeat(SKAction.sequence([SKAction.wait(forDuration: 2),action2]), count: 5))
     }
     
     run(SKAction.sequence([wait, action]))
@@ -81,6 +79,9 @@ public class IntroScene: SKScene {
     var texture1 = [SKTexture]()
     var texture2 = [SKTexture]()
     currentPlayer.removeAllActions()
+    self.run(SKAction.sequence([SKAction.fadeOut(withDuration: 0.3),SKAction.fadeIn(withDuration: 0.4)]), completion: {
+      self.introText.alpha = 1
+      self.addButtons()
       currentPlayer.texture = SKTexture(imageNamed: image + "0.png")
       texture1 = [SKTexture(imageNamed: image + "0.png"),
                   SKTexture(imageNamed: image + "1.png"),
@@ -91,9 +92,11 @@ public class IntroScene: SKScene {
                   SKTexture(imageNamed: image + "0.png"),
                   SKTexture(imageNamed: image + "1.png"),
                   SKTexture(imageNamed: image + "0.png")]
-    
-    animateIdle(currentPlayer: currentPlayer, texture1: texture1, texture2: texture2)
-    
+      
+      self.animateIdle(currentPlayer: currentPlayer, texture1: texture1, texture2: texture2)
+      
+    })
+   
   }
   
   func animateIdle(currentPlayer : SKSpriteNode, texture1: [SKTexture] , texture2: [SKTexture]) {
@@ -122,22 +125,20 @@ public class IntroScene: SKScene {
   func addButtons() {
     
     allCooperate = Button()
-    allCooperate.position = CGPoint(x: 349.01 , y: 208.675)
+    allCooperate.position = CGPoint(x: 615 , y: 280)
     allCooperate.delegate = self
     addChild(allCooperate)
-    allCooperate.addTextNode(text: "All Cooperate")
+    allCooperate.addTextNode(text: "Continue?")
     allCooperate.setButtonType(buttonType: .allCooperate)
     
   }
   
-  func gamePlay(sender: Button, type: ButtonType) {
-  }
   
 }
 
 extension IntroScene: ButtonDelegate {
   func didTap(sender: Button, type: ButtonType) {
     sender.setButtonDeactive()
-    gamePlay(sender: sender, type: type)
+    
   }
 }
