@@ -6,7 +6,7 @@ import SpriteKit
 
 // Load the SKScene from 'GameScene.sks'
 let sceneView = SKView(frame: CGRect(x:0 , y:0, width: 640, height: 480))
-if let scene = MainGameScene(fileNamed: "GameScene1") {
+if let scene = IntroScene(fileNamed: "IntroScene") {
     // Set the scale mode to scale to fit the window
     scene.scaleMode = .aspectFill
     
