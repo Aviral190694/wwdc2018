@@ -273,7 +273,6 @@ public class GameScene: SKScene {
   func gamePlay(type: ButtonType) {
     hideArrowAndLabel()
     deactiveAllButton()
-    print("I am being called")
     switch type {
     case .allCooperate:
       playerAnimate(player1Action: .cooperate, player2Action: .cooperate)

@@ -140,24 +140,14 @@ public class MainGameScene: SKScene {
     currentRound += 1
     switch type {
     case .cooperate:
-      print("Cooperate Clicked")
       let playerAction2 = getPlayerStrategy(type : playerOrder[currentPlayer].type, playerAction: .cooperate)
-//      print(playerAction2)
       playerAnimate(player1Action: .cooperate, player2Action: playerAction2, imageName: playerOrder[currentPlayer].imageName)
     case .cheat:
       let playerAction2 = getPlayerStrategy(type : playerOrder[currentPlayer].type, playerAction: .cheat)
-//      print(playerAction2)
-      print("Cheat Clicked")
       playerAnimate(player1Action: .cheat, player2Action: playerAction2, imageName: playerOrder[currentPlayer].imageName)
     default:
       print("Wrong Button")
     }
-    
-//    if currentRound == playerOrder[currentPlayer].round {
-//      currentRound = 0
-//      currentPlayer += 1
-//      //      setPlayerMode(currentPlayer : player1, playerMood : .normal, image: playerOrder[currentPlayer].imageName)
-//    }
   }
   
   func getPlayerStrategy(type: PlayerType, playerAction: PlayerAction) -> PlayerAction {
@@ -209,7 +199,11 @@ public class MainGameScene: SKScene {
     self.currentAiScore = 0
     self.currentPlayerScore = 0
     if self.currentPlayer == 5 {
-      print("Game ended")
+      let gameScene = ResultScene(fileNamed: "result")!
+      let transition = SKTransition.flipVertical(withDuration: 1.0)
+      gameScene.score = totalScore
+      gameScene.scaleMode = .aspectFill
+      view?.presentScene(gameScene, transition: transition)
     } else {
       
       let action1 = SKAction.run {

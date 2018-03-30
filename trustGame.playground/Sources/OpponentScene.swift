@@ -77,8 +77,6 @@ public class OpponentScene: SKScene {
   }
   
   func addButtons() {
-    
-    
     let button = PlayerButton()
     button.position = CGPoint(x: 623.903 , y: 548.026)
     button.delegate = self
@@ -133,19 +131,14 @@ extension OpponentScene: PlayerButtonDelegate {
     let jump = SKAction(named: "jump")!
     switch type {
     case .allCooperate :
-      print("All Cooperate")
       cooperate.run(SKAction.sequence([jump,jump]))
     case .allDefect :
-      print("defecct")
       cheat.run(SKAction.sequence([jump,jump]))
     case .copycat :
-      print("copycat")
       copycat.run(SKAction.sequence([jump,jump]))
     case .grudges:
-      print("Grudge")
       grudge.run(SKAction.sequence([jump,jump]))
     case .prober:
-      print("prober")
       detective.run(SKAction.sequence([jump,jump]))
     }
   }
