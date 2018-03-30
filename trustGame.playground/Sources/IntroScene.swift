@@ -14,7 +14,7 @@ public class IntroScene: SKScene {
   var count = 0.0
   var waitTime = 0.13
   var textCount = 0
-  var textArray = ["Every person is different.", "They all lead life differently.", "They all take decision differrently","and then there's me!"]
+  var textArray = ["Every person is different.", "Even though they look similar \nThey all lead life differently.", "They all take decisions differrently","and then there's me!"]
   
   public override func didMove(to view: SKView) {
     run(SKAction.repeatForever(SKAction.playSoundFileNamed("bg_music.mp3", waitForCompletion: true)))
@@ -139,6 +139,9 @@ public class IntroScene: SKScene {
 extension IntroScene: ButtonDelegate {
   func didTap(sender: Button, type: ButtonType) {
     sender.setButtonDeactive()
-    
+    let gameScene = OpponentScene(fileNamed: "GameScene3")!
+    let transition = SKTransition.flipVertical(withDuration: 1.0)
+    gameScene.scaleMode = .aspectFill
+    view?.presentScene(gameScene, transition: transition)
   }
 }

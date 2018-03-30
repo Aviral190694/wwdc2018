@@ -13,10 +13,12 @@ public class GameScene: SKScene {
   private var coin: SKSpriteNode!
   private var coin1: SKSpriteNode!
   
-  private var allCooperate: Button!
-  private var cooperateCheat: Button!
-  private var cheatCooperate: Button!
-  private var allCheat: Button!
+  private var allCooperate: RuleButton!
+  private var cooperateCheat: RuleButton!
+  private var cheatCooperate: RuleButton!
+  private var allCheat: RuleButton!
+  
+  private var playButton: Button!
   
   private var youCheatLabel: SKLabelNode!
   private var youCooperateLabel: SKLabelNode!
@@ -38,7 +40,7 @@ public class GameScene: SKScene {
   private var isExtraTextHidden = false
   
   public override func didMove(to view: SKView) {
-    run(SKAction.repeatForever(SKAction.playSoundFileNamed("bg_music.mp3", waitForCompletion: true)))
+//    run(SKAction.repeatForever(SKAction.playSoundFileNamed("bg_music.mp3", waitForCompletion: true)))
     machineAnim = childNode(withName: "//payoffAnim") as? SKSpriteNode
     player = childNode(withName: "//player") as? SKSpriteNode
     player1 = childNode(withName: "//player1") as? SKSpriteNode
@@ -88,6 +90,7 @@ public class GameScene: SKScene {
       arrowOtherPlayer.isHidden = true
     }
   }
+  
   func setPlayerMode(currentPlayer : SKSpriteNode, playerMood : PlayerMood, image: String) {
     var texture1 = [SKTexture]()
     var texture2 = [SKTexture]()
@@ -176,33 +179,43 @@ public class GameScene: SKScene {
   
   func addButtons() {
     
-    allCooperate = Button()
-    allCooperate.position = CGPoint(x: 349.01 , y: 208.675)
+    allCooperate = RuleButton()
+    allCooperate.position = CGPoint(x: 349.01 , y: 222.675)
     allCooperate.delegate = self
     addChild(allCooperate)
     allCooperate.addTextNode(text: "All Cooperate")
     allCooperate.setButtonType(buttonType: .allCooperate)
     
-    cooperateCheat = Button()
-    cooperateCheat.position = CGPoint(x: 661.484 , y: 208.675)
+    cooperateCheat = RuleButton()
+    cooperateCheat.position = CGPoint(x: 661.484 , y: 222.675)
     cooperateCheat.delegate = self
     addChild(cooperateCheat)
     cooperateCheat.addTextNode(text: "Cooperate - Cheat")
     cooperateCheat.setButtonType(buttonType: .cooperateCheat)
     
-    cheatCooperate = Button()
-    cheatCooperate.position = CGPoint(x: 349.01 , y: 97.728)
+    cheatCooperate = RuleButton()
+    cheatCooperate.position = CGPoint(x: 349.01 , y: 122.728)
     cheatCooperate.delegate = self
     addChild(cheatCooperate)
     cheatCooperate.addTextNode(text: "Cheat - Cooperate")
     cheatCooperate.setButtonType(buttonType: .cheatCooperate)
     
-    allCheat = Button()
-    allCheat.position = CGPoint(x: 661.484 , y: 97.728)
+    allCheat = RuleButton()
+    allCheat.position = CGPoint(x: 661.484 , y: 122.728)
     allCheat.delegate = self
     addChild(allCheat)
     allCheat.addTextNode(text: "All Cheat")
     allCheat.setButtonType(buttonType: .allCheat)
+    
+    playButton = Button()
+    playButton.position = CGPoint(x: 519.053 , y: 54.66)
+    playButton.delegate = self
+    addChild(playButton)
+    playButton.addTextNode(text: "Lets Play!")
+    allCheat.setButtonType(buttonType: .cheat)
+    playButton.isUserInteractionEnabled = false
+    playButton.setButtonDeactive()
+    
     
   }
   
@@ -240,6 +253,8 @@ public class GameScene: SKScene {
     cheatCooperate.setButtonDeactive()
     cooperateCheat.isUserInteractionEnabled = false
     cooperateCheat.setButtonDeactive()
+    playButton.isUserInteractionEnabled = false
+    playButton.setButtonDeactive()
   }
   
   func activateAllButton() {
@@ -251,9 +266,11 @@ public class GameScene: SKScene {
     cheatCooperate.setButtonNormal()
     cooperateCheat.isUserInteractionEnabled = true
     cooperateCheat.setButtonNormal()
+    playButton.isUserInteractionEnabled = true
+    playButton.setButtonNormal()
   }
   
-  func gamePlay(sender: Button, type: ButtonType) {
+  func gamePlay(type: ButtonType) {
     hideArrowAndLabel()
     deactiveAllButton()
     switch type {
@@ -266,7 +283,7 @@ public class GameScene: SKScene {
     case .cheatCooperate:
       playerAnimate(player1Action: .cheat, player2Action: .cooperate)
     default:
-      print("Wrong Button")
+     print("wrong button")
     }
     
   }
@@ -321,6 +338,7 @@ public class GameScene: SKScene {
                                                     give]), completion: {
                                                       self.coinGiveAway.position = CGPoint(x: 323.65,y: 340.443)
                                                       self.coinGiveAway1.position = CGPoint(x: 323.65,y: 340.443)
+                                                      self.coinGiveAway2.position = CGPoint(x: 323.65,y: 340.443)
                                                       self.setPlayerMode(currentPlayer : self.player, playerMood : .happy, image: "player")
                                                       self.player.position = CGPoint(x: 97.058,y: 391.391)
                                                       self.coin.position = CGPoint(x: 130.471,y: 319.144)
@@ -347,6 +365,7 @@ public class GameScene: SKScene {
                                                         self.coin1.position = CGPoint(x: 883.623,y: 319.208)
                                                         self.coinGiveAwayAi.position = CGPoint(x: 700.995,y: 340.443)
                                                         self.coinGiveAwayAi1.position = CGPoint(x: 700.995,y: 340.443)
+                                                        self.coinGiveAwayAi2.position = CGPoint(x: 700.995,y: 340.443)
           })
           
         }
@@ -533,6 +552,16 @@ public class GameScene: SKScene {
 extension GameScene: ButtonDelegate {
   func didTap(sender: Button, type: ButtonType) {
     sender.setButtonDeactive()
-    gamePlay(sender: sender, type: type)
+    let gameScene = MainGameScene(fileNamed: "GameScene1")!
+    let transition = SKTransition.flipVertical(withDuration: 1.0)
+    gameScene.scaleMode = .aspectFill
+    view?.presentScene(gameScene, transition: transition)
+  }
+}
+
+extension GameScene: RuleButtonDelegate {
+  func didTap(sender: RuleButton, type: ButtonType) {
+    sender.setButtonDeactive()
+    gamePlay(type: type)
   }
 }

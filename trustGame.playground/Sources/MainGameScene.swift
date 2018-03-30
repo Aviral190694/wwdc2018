@@ -79,7 +79,6 @@ public class MainGameScene: SKScene {
   var proberMoves: [PlayerAction] = [.cooperate, .cheat, .cooperate , .cooperate]
   
   public override func didMove(to view: SKView) {
-    run(SKAction.repeatForever(SKAction.playSoundFileNamed("bg_music.mp3", waitForCompletion: true)))
     machineAnim = childNode(withName: "//payoffAnim") as? SKSpriteNode
     player = childNode(withName: "//player") as? SKSpriteNode
     player1 = childNode(withName: "//player1") as? SKSpriteNode
