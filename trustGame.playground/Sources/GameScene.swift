@@ -62,7 +62,7 @@ public class GameScene: SKScene {
     playerMood = .normal
     player1Mood = .normal
     setPlayerMode(currentPlayer : player, playerMood : .normal, image: "player")
-    setPlayerMode(currentPlayer : player1, playerMood : .normal, image: "player")
+    setPlayerMode(currentPlayer : player1, playerMood : .normal, image: "player1_")
     
     addButtons()
     startMachine()
@@ -212,7 +212,7 @@ public class GameScene: SKScene {
     playButton.delegate = self
     addChild(playButton)
     playButton.addTextNode(text: "Lets Play!")
-    allCheat.setButtonType(buttonType: .cheat)
+    playButton.setButtonType(buttonType: .cheat)
     playButton.isUserInteractionEnabled = false
     playButton.setButtonDeactive()
     
@@ -273,6 +273,7 @@ public class GameScene: SKScene {
   func gamePlay(type: ButtonType) {
     hideArrowAndLabel()
     deactiveAllButton()
+    print("I am being called")
     switch type {
     case .allCooperate:
       playerAnimate(player1Action: .cooperate, player2Action: .cooperate)
@@ -353,14 +354,14 @@ public class GameScene: SKScene {
       
       self.player1.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer1]))
       self.coin1.run(actionCoin1, completion: {
-        self.changePlayerTexture(currentPlayer: self.player1, texture: "player10.png")
+        self.changePlayerTexture(currentPlayer: self.player1, texture: "player1_10.png")
         let changeAction = SKAction.run {
           
           self.coinGiveAwayAi.run(giveAi)
           self.coinGiveAwayAi1.run(SKAction.sequence([SKAction.wait(forDuration: 0.25),giveAi]))
           self.coinGiveAwayAi2.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
                                                       giveAi]), completion: {
-                                                        self.setPlayerMode(currentPlayer : self.player1, playerMood : .happy, image: "player")
+                                                        self.setPlayerMode(currentPlayer : self.player1, playerMood : .happy, image: "player1_")
                                                         self.player1.position = CGPoint(x: 924.971,y: 391.391)
                                                         self.coin1.position = CGPoint(x: 883.623,y: 319.208)
                                                         self.coinGiveAwayAi.position = CGPoint(x: 700.995,y: 340.443)
@@ -410,9 +411,9 @@ public class GameScene: SKScene {
       
       self.player1.run(SKAction.sequence([SKAction.wait(forDuration:0.25), actionPlayer1]))
       self.coin1.run(actionCoin1, completion: {
-        self.changePlayerTexture(currentPlayer: self.player1, texture: "player11.png")
+        self.changePlayerTexture(currentPlayer: self.player1, texture: "player1_11.png")
         let changeAction = SKAction.run {
-          self.setPlayerMode(currentPlayer : self.player1, playerMood : .angry, image: "player")
+          self.setPlayerMode(currentPlayer : self.player1, playerMood : .angry, image: "player1_")
           self.player1.position = CGPoint(x: 924.971,y: 391.391)
         }
         self.player1.run(SKAction.sequence([actionPlayer,wait,changeAction]))
@@ -452,9 +453,9 @@ public class GameScene: SKScene {
           self.coin.position = CGPoint(x: 130.471,y: 319.144)
         }
         self.player.run(SKAction.sequence([actionPlayer1,wait,changeAction]))
-        self.changePlayerTexture(currentPlayer: self.player1, texture: "player13.png")
+        self.changePlayerTexture(currentPlayer: self.player1, texture: "player1_13.png")
         let changeAction1 = SKAction.run {
-          self.setPlayerMode(currentPlayer : self.player1, playerMood : .swag, image: "player")
+          self.setPlayerMode(currentPlayer : self.player1, playerMood : .swag, image: "player1_")
           self.player1.position = CGPoint(x: 924.971,y: 391.391)
         }
         self.player1.run(SKAction.sequence([actionPlayer,wait,changeAction1]))
@@ -533,9 +534,9 @@ public class GameScene: SKScene {
             })
         })
         
-        self.changePlayerTexture(currentPlayer: self.player1, texture: "player12.png")
+        self.changePlayerTexture(currentPlayer: self.player1, texture: "player1_12.png")
         let changeAction1 = SKAction.run {
-          self.setPlayerMode(currentPlayer : self.player1, playerMood : .sad, image: "player")
+          self.setPlayerMode(currentPlayer : self.player1, playerMood : .sad, image: "player1_")
           self.player1.position = CGPoint(x: 924.971,y: 391.391)
           self.coin1.position = CGPoint(x: 883.623,y: 319.208)
         }
@@ -545,8 +546,6 @@ public class GameScene: SKScene {
     }
     run(SKAction.sequence([wait, action]))
   }
-  
-  
 }
 
 extension GameScene: ButtonDelegate {
