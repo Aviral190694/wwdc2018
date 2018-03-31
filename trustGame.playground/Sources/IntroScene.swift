@@ -14,15 +14,18 @@ public class IntroScene: SKScene {
   var count = 0.0
   var waitTime = 0.13
   var textCount = 0
-  var textArray = ["Every person is different.", "Even though they look similar \nThey all lead life differently.", "They all take decisions differrently","and then there's me!"]
+  var textArray = ["Every person is different.",
+                   "Even though they look similar \nThey all lead life differently.",
+                   "They all take decisions differrently",
+                   "and then there's me!"]
   
   public override func didMove(to view: SKView) {
     run(SKAction.repeatForever(SKAction.playSoundFileNamed("bg_music.mp3", waitForCompletion: true)))
     player = childNode(withName: "//player") as? SKSpriteNode
     introText = childNode(withName: "//introText") as? SKLabelNode
     dummyText = childNode(withName: "//dummyText") as? SKLabelNode
-//    setPlayerMode(currentPlayer : player, playerMood : .normal, image: "player")
-//    addButtons()
+    //    setPlayerMode(currentPlayer : player, playerMood : .normal, image: "player")
+    //    addButtons()
     
     
     let wait = SKAction.wait(forDuration: 0.3)
@@ -34,21 +37,21 @@ public class IntroScene: SKScene {
         self.removePeople()
         self.setPlayerMode(currentPlayer : self.player, playerMood : .normal, image: "player")
       } else {
-      let paragraphStyle = NSMutableParagraphStyle()
-      paragraphStyle.alignment = .center
-      
-      let newString = NSMutableAttributedString(string: self.textArray[self.textCount], attributes: [NSAttributedStringKey.paragraphStyle: paragraphStyle])
-      newString.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.black , range: NSMakeRange(0,self.textArray[self.textCount].count))
-      newString.addAttribute( NSAttributedStringKey.font, value: UIFont(name: "HelveticaNeue-Medium", size: 36)!, range: NSMakeRange(0,self.textArray[self.textCount].count))
-      self.dummyText.attributedText = newString
-//      self.dummyText.text = self.textArray[self.textCount]
-      self.textCount += 1
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .center
+        
+        let newString = NSMutableAttributedString(string: self.textArray[self.textCount], attributes: [NSAttributedStringKey.paragraphStyle: paragraphStyle])
+        newString.addAttribute(NSAttributedStringKey.foregroundColor, value: UIColor.black , range: NSMakeRange(0,self.textArray[self.textCount].count))
+        newString.addAttribute( NSAttributedStringKey.font, value: UIFont(name: "HelveticaNeue-Medium", size: 36)!, range: NSMakeRange(0,self.textArray[self.textCount].count))
+        self.dummyText.attributedText = newString
+        //      self.dummyText.text = self.textArray[self.textCount]
+        self.textCount += 1
       }
     }
     
     let action = SKAction.run {
       self.addPeople()
-     self.dummyText.run(SKAction.fadeIn(withDuration : 0.5))
+      self.dummyText.run(SKAction.fadeIn(withDuration : 0.5))
       self.run(SKAction.repeat(SKAction.sequence([SKAction.wait(forDuration: 2),action2]), count: 5))
     }
     
@@ -96,12 +99,13 @@ public class IntroScene: SKScene {
       self.animateIdle(currentPlayer: currentPlayer, texture1: texture1, texture2: texture2)
       
     })
-   
+    
   }
   
   func animateIdle(currentPlayer : SKSpriteNode, texture1: [SKTexture] , texture2: [SKTexture]) {
     currentPlayer.removeAllActions()
     run(SKAction.playSoundFileNamed("popSound.mp3", waitForCompletion: true))
+    currentPlayer.run(SKAction.playSoundFileNamed("pla.mp3", waitForCompletion: false))
     currentPlayer.alpha = 1
     let wait = SKAction.wait(forDuration:3, withRange: 2)
     let runAction = SKAction.run {
@@ -123,16 +127,13 @@ public class IntroScene: SKScene {
   }
   
   func addButtons() {
-    
     allCooperate = Button()
     allCooperate.position = CGPoint(x: 615 , y: 280)
     allCooperate.delegate = self
     addChild(allCooperate)
     allCooperate.addTextNode(text: "Continue?")
     allCooperate.setButtonType(buttonType: .allCooperate)
-    
   }
-  
   
 }
 

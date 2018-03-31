@@ -132,14 +132,19 @@ extension OpponentScene: PlayerButtonDelegate {
     switch type {
     case .allCooperate :
       cooperate.run(SKAction.sequence([jump,jump]))
+      cooperate.run(SKAction.playSoundFileNamed("copp.mp3", waitForCompletion: false))
     case .allDefect :
       cheat.run(SKAction.sequence([jump,jump]))
+      cheat.run(SKAction.playSoundFileNamed("che.mp3", waitForCompletion: false))
     case .copycat :
       copycat.run(SKAction.sequence([jump,jump]))
+      copycat.run(SKAction.playSoundFileNamed("copy.mp3", waitForCompletion: false))
     case .grudges:
       grudge.run(SKAction.sequence([jump,jump]))
+      grudge.run(SKAction.playSoundFileNamed("grud.mp3", waitForCompletion: false))
     case .prober:
       detective.run(SKAction.sequence([jump,jump]))
+      detective.run(SKAction.playSoundFileNamed("detec.mp3", waitForCompletion: false))
     }
   }
 }

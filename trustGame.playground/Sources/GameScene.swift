@@ -40,7 +40,7 @@ public class GameScene: SKScene {
   private var isExtraTextHidden = false
   
   public override func didMove(to view: SKView) {
-//    run(SKAction.repeatForever(SKAction.playSoundFileNamed("bg_music.mp3", waitForCompletion: true)))
+    //    run(SKAction.repeatForever(SKAction.playSoundFileNamed("bg_music.mp3", waitForCompletion: true)))
     machineAnim = childNode(withName: "//payoffAnim") as? SKSpriteNode
     player = childNode(withName: "//player") as? SKSpriteNode
     player1 = childNode(withName: "//player1") as? SKSpriteNode
@@ -67,7 +67,7 @@ public class GameScene: SKScene {
     addButtons()
     startMachine()
     
-   
+    
   }
   
   func hideArrowAndLabel() {
@@ -283,7 +283,7 @@ public class GameScene: SKScene {
     case .cheatCooperate:
       playerAnimate(player1Action: .cheat, player2Action: .cooperate)
     default:
-     print("wrong button")
+      print("wrong button")
     }
     
   }
@@ -312,7 +312,7 @@ public class GameScene: SKScene {
   }
   
   func getYellow() -> UIColor {
-   return UIColor(red: 255.0/255.0,green: 230.0/255.0, blue: 99.0/255.0,alpha: 1)
+    return UIColor(red: 255.0/255.0,green: 230.0/255.0, blue: 99.0/255.0,alpha: 1)
   }
   
   func playerAllCooperateAnimation() {

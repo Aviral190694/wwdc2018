@@ -62,10 +62,10 @@ public class MainGameScene: SKScene {
   
   
   private var playerOrder: [(type: PlayerType, round: Int, imageName: String)] = [(type: .copycat, round: 5, imageName : "copycat"),
-                                           (type: .allDefect, round: 4, imageName : "cheat"),
-                                           (type: .allCooperate, round: 4, imageName : "cooperate"),
-                                           (type: .grudges, round: 5, imageName : "grudge"),
-                                           (type: .prober, round: 7, imageName : "detective")]
+                                                                                  (type: .allDefect, round: 4, imageName : "cheat"),
+                                                                                  (type: .allCooperate, round: 4, imageName : "cooperate"),
+                                                                                  (type: .grudges, round: 5, imageName : "grudge"),
+                                                                                  (type: .prober, round: 7, imageName : "detective")]
   
   var currentRound = 0 
   
@@ -111,7 +111,7 @@ public class MainGameScene: SKScene {
     startMachine()
   }
   
-   func addButtons() {
+  func addButtons() {
     cooperateButton = Button()
     cooperateButton.position = CGPoint(x: 349.01 , y: 97.728)
     cooperateButton.delegate = self
@@ -219,7 +219,7 @@ public class MainGameScene: SKScene {
       self.player.run(SKAction.sequence([SKAction.fadeOut(withDuration : 0.5),SKAction.wait(forDuration: 0.5),action2]))
       
     }
-   }
+  }
   
   func setPlayerMode(currentPlayer : SKSpriteNode, playerMood : PlayerMood, image: String) {
     var texture1 = [SKTexture]()
@@ -673,11 +673,11 @@ public class MainGameScene: SKScene {
       let you = childNode(withName: "//youLabel") as! SKLabelNode
       let otherPlayer = childNode(withName: "//otherPlayer") as! SKLabelNode
       let machineText = childNode(withName: "//machineText") as! SKLabelNode
-//
+      //
       let arrowYou = childNode(withName: "//ArrowYou") as! SKSpriteNode
       let machineArrow = childNode(withName: "//ArrowMachine") as! SKSpriteNode
       let arrowOtherPlayer = childNode(withName: "//ArrowOtherPlayer") as! SKSpriteNode
-//
+      //
       you.isHidden = true
       otherPlayer.isHidden = true
       machineText.isHidden = true

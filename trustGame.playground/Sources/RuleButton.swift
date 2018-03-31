@@ -1,22 +1,15 @@
 import Foundation
 import SpriteKit
 
-
-// MARK: Play Button Delegate
-
 protocol RuleButtonDelegate: class {
   func didTap(sender: RuleButton, type: ButtonType)
 }
 
 public class RuleButton: SKSpriteNode {
-  
-  // MARK: Properties
-  
+
   weak var delegate: RuleButtonDelegate?
   private var type: ButtonType!
   var textNode: SKLabelNode!
-  
-  // MARK: Lifecycle
   
   init() {
     let texture = SKTexture(imageNamed: "buttonNormal.png")
@@ -24,7 +17,6 @@ public class RuleButton: SKSpriteNode {
     let color = SKColor.clear
     let size = CGSize(width: 200, height: 50)
     super.init(texture: texture, color: color, size: size)
-    //
     isUserInteractionEnabled = true
     zPosition = 1
     type = .allCooperate
@@ -57,9 +49,7 @@ public class RuleButton: SKSpriteNode {
   required public init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
-  // MARK: Touch Handling
-  
+
   public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
     super.touchesBegan(touches, with: event)
     alpha = 0.5
@@ -86,8 +76,6 @@ public class RuleButton: SKSpriteNode {
     super.touchesCancelled(touches, with: event)
     performButtonAppearanceResetAnimation()
   }
-  
-  // MARK: Helper Functions
   
   func performButtonAppearanceResetAnimation() {
     let alphaAction = SKAction.fadeAlpha(to: 1.0, duration: 0.10)
