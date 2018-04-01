@@ -154,7 +154,7 @@ extension OpponentScene: ButtonDelegate {
   func didTap(sender: Button, type: ButtonType) {
     sender.setButtonDeactive()
     let gameScene = GameScene(fileNamed: "GameScene")!
-    let transition = SKTransition.flipVertical(withDuration: 1.0)
+    let transition = SKTransition.fade(withDuration: 1.0)
     gameScene.scaleMode = .aspectFill
     view?.presentScene(gameScene, transition: transition)
   }

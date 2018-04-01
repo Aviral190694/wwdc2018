@@ -4,13 +4,9 @@ import PlaygroundSupport
 import SpriteKit
 
 
-// Load the SKScene from 'GameScene.sks'
 let sceneView = SKView(frame: CGRect(x:0 , y:0, width: 560, height: 420))
 if let scene = IntroScene(fileNamed: "IntroScene") {
-    // Set the scale mode to scale to fit the window
     scene.scaleMode = .aspectFill
-    
-    // Present the scene
     sceneView.presentScene(scene)
 }
 

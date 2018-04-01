@@ -141,7 +141,7 @@ extension IntroScene: ButtonDelegate {
   func didTap(sender: Button, type: ButtonType) {
     sender.setButtonDeactive()
     let gameScene = OpponentScene(fileNamed: "GameScene3")!
-    let transition = SKTransition.flipVertical(withDuration: 1.0)
+    let transition = SKTransition.doorway(withDuration: 1.0)
     gameScene.scaleMode = .aspectFill
     view?.presentScene(gameScene, transition: transition)
   }
