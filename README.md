@@ -23,3 +23,7 @@ The branch of mathematics concerned with the analysis of strategies for dealing 
  * **Always Cooperate** : Let's be best friends! ❤️ Always Cooperate!
  * **Grudge** : Listen, pardner. I'll start cooperatin', and keep cooperatin', but if y'all ever cheat me, I'LL CHEAT YOU BACK 'TIL THE END OF TARNATION.
  * **Prober** : First: I analyze you. I start: Cooperate, Cheat, Cooperate, Cooperate. If you cheat back, I'll act like Copycat. If you never cheat back I'll act like Always Cheat, to exploit you. Elementary, my dear Watson.
+
+### Inspired and Assets from
+ http://ncase.me/trust/ (https://github.com/ncase/trust/#play-it-here-httpncasemetrust)
+ Thank you Ncase for making it open source under Creative Commons Zero . I used the assets which I recreated in sketch becuase of seperating each character, English text and game mechanics which I reimplemented again using Swift. No line of code is used. 
